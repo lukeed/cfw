@@ -1,5 +1,17 @@
 {
   "name": "cfw",
   "private": true,
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "bin": "bin.js",
+  "files": [
+    "*.js",
+    "lib"
+  ],
+  "dependencies": {
+    "httpie": "^1.1.2",
+    "kleur": "^3.0.3",
+    "rollup": "^1.18.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "sade": "^1.6.1"
+  }
 }
