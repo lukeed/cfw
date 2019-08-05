@@ -1,11 +1,22 @@
 {
   "name": "cfw",
   "version": "0.0.2",
+  "repository": "lukeed/cfw",
+  "description": "WIP",
+  "license": "MIT",
   "bin": "bin.js",
   "files": [
     "*.js",
     "lib"
   ],
+  "author": {
+    "name": "Luke Edwards",
+    "email": "luke@lukeed.com",
+    "url": "https://lukeed.com"
+  },
+  "engines": {
+    "node": ">=8"
+  },
   "scripts": {
     "test": "eslint bin.js lib"
   },
