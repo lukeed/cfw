@@ -23,10 +23,12 @@
   "dependencies": {
     "httpie": "^1.1.2",
     "kleur": "^3.0.3",
+    "mime": "^2.4.4",
     "premove": "^1.0.0",
     "rollup": "^1.18.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "sade": "^1.6.1"
+    "sade": "^1.6.1",
+    "totalist": "^1.0.1"
   },
   "devDependencies": {
     "eslint": "6.1.0"
