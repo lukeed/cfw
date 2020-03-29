@@ -23,6 +23,7 @@
   "dependencies": {
     "httpie": "^1.1.2",
     "kleur": "^3.0.3",
+    "klona": "^1.1.1",
     "premove": "^1.0.0",
     "rollup": "^1.18.0",
     "rollup-plugin-node-resolve": "^5.2.0",
