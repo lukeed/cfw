@@ -1,8 +1,8 @@
-const { send } = require('httpie');
+import { send as http } from 'httpie';
 
 const API = 'https://api.cloudflare.com/client/v4';
 
-exports.toHeaders = function (creds, obj={}) {
+export function toHeaders(creds, obj={}) {
 	const headers = obj;
 
 	if (creds.token) {
@@ -15,6 +15,6 @@ exports.toHeaders = function (creds, obj={}) {
 	return headers;
 }
 
-exports.send = function (method, pathname, opts={}) {
-	return send(method, API + pathname, opts).then(r => r.data);
+export function send(method, pathname, opts={}) {
+	return http(method, API + pathname, opts).then(r => r.data);
 }

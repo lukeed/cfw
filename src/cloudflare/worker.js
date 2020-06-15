@@ -1,7 +1,7 @@
-const { error } = require('../log');
-const { send, toHeaders } = require('./utils');
+import { error } from '../log';
+import { send, toHeaders } from './utils';
 
-exports.route = function (pattern, script, creds) {
+export function route(pattern, script, creds) {
 	return send('POST', `/zones/${creds.zoneid}/workers/routes`, {
 		headers: toHeaders(creds, {
 			'Content-Type': 'application/javascript',
@@ -17,7 +17,7 @@ exports.route = function (pattern, script, creds) {
 	});
 }
 
-exports.script = function (filedata, name, creds) {
+export function script(filedata, name, creds) {
 	return send('PUT', `/accounts/${creds.accountid}/workers/scripts/${name}`, {
 		headers: toHeaders(creds, {
 			'Content-Type': 'application/javascript',

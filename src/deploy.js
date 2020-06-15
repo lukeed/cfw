@@ -1,8 +1,8 @@
-const colors = require('kleur');
-const { resolve } = require('path');
-const worker = require('./cloudflare/worker');
-const { log, success, warn, error } = require('./log');
-const { read, toCredentials, toWorkers } = require('./util');
+import colors from 'kleur';
+import { resolve } from 'path';
+import * as worker from './cloudflare/worker';
+import { log, success, warn, error } from './log';
+import { read, toCredentials, toWorkers } from './util';
 
 function upload(file, name, creds) {
 	return read(file, 'utf8').then(data => {
@@ -12,7 +12,7 @@ function upload(file, name, creds) {
 	});
 }
 
-module.exports = async function (output, opts) {
+export default async function (output, opts) {
 	let cwd = opts.cwd = resolve(opts.cwd);
 
 	opts.dest = output || 'build';

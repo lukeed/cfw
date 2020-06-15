@@ -1,12 +1,11 @@
-const klona = require('klona');
-const colors = require('kleur');
-const { rollup } = require('rollup');
-const { join, resolve } = require('path');
-const { log, success, warn } = require('./log');
-const { rimraf, toWorkers, write } = require('./util');
-const baseConfig = require('./config');
+import klona from 'klona';
+import colors from 'kleur';
+import { join, resolve } from 'path';
+import { log, success, warn } from './log';
+import { rimraf, toWorkers, write } from './util';
+import baseConfig from './config';
 
-module.exports = async function (src, output, opts) {
+export default async function (src, output, opts) {
 	let cwd = opts.cwd = resolve(opts.cwd);
 
 	opts.dirname = src || 'workers';
@@ -27,6 +26,8 @@ module.exports = async function (src, output, opts) {
 	}
 
 	await rimraf(output);
+
+	const { rollup } = require('rollup');
 
 	let arrow = colors.cyan('   ~> ');
 	let sfx = items.length === 1 ? '' : 's';

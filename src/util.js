@@ -1,60 +1,60 @@
-const fs = require('fs');
-const del = require('premove');
-const { homedir } = require('os');
-const { promisify } = require('util');
-const { parse, join, resolve } = require('path');
-const { warn, error } = require('./log');
+import fs from 'fs';
+import del from 'premove';
+import { homedir } from 'os';
+import { promisify } from 'util';
+import { parse, join, resolve } from 'path';
+import { warn, error } from './log';
 
-exports.write = promisify(fs.writeFile);
-exports.read = promisify(fs.readFile);
+export const write = promisify(fs.writeFile);
+export const read = promisify(fs.readFile);
 
-exports.rimraf = function (path) {
+export function rimraf(path) {
 	if (!fs.existsSync(path)) return;
 	warn(`Removing existing "${parse(path).name}" directory`);
 	return del(path);
 }
 
-exports.assert = function (mix, msg, toExist) {
+export function assert(mix, msg, toExist) {
 	(toExist ? fs.existsSync(mix) : !!mix) || error(msg);
 }
 
-function list(str) {
+export function list(str) {
 	return Array.isArray(str) ? str : str.split(',');
 }
 
-exports.load = function (str, dir) {
+export function load(str, dir) {
 	str = resolve(dir || '.', str);
 	return fs.existsSync(str) && require(str);
 }
 
-exports.toConfig = function (dir, tmp) {
-	if (tmp = exports.load('cfw.js', dir)) return tmp;
-	if (tmp = exports.load('cfw.json', dir)) return tmp;
-	if (tmp = exports.load('package.json', dir)) return tmp.cfw;
+export function toConfig(dir, tmp) {
+	if (tmp = load('cfw.js', dir)) return tmp;
+	if (tmp = load('cfw.json', dir)) return tmp;
+	if (tmp = load('package.json', dir)) return tmp.cfw;
 }
 
-exports.toWorker = function (dir, name, isOne) {
+export function toWorker(dir, name, isOne) {
 	let abs = isOne ? dir : join(dir, name);
 
 	let out = { abs, name };
-	let config = exports.toConfig(abs) || {};
+	let config = toConfig(abs) || {};
 	out.input = join(abs, config.entry || 'index.js');
 	if (config.name) out.name = config.name;
 	out.cfw = config;
 	return out;
 }
 
-exports.toWorkers = function (dir, opts) {
-	exports.assert(dir, `Workers directory does not exist: "${dir}"`, true);
+export function toWorkers(dir, opts) {
+	assert(dir, `Workers directory does not exist: "${dir}"`, true);
 
 	let tmp, { cwd, single, only, ignore } = opts;
 
 	if (single) {
 		let name = opts.dirname;
 		if (name === '.') name = parse(cwd).base;
-		let obj = exports.toWorker(dir, name, true);
+		let obj = toWorker(dir, name, true);
 		// check for root config
-		if (tmp = exports.toConfig(cwd)) {
+		if (tmp = toConfig(cwd)) {
 			if (tmp.name) obj.name = tmp.name;
 			Object.assign(obj.cfw, tmp);
 			if (opts.profile) obj.cfw.profile = opts.profile;
@@ -62,7 +62,7 @@ exports.toWorkers = function (dir, opts) {
 		return [obj];
 	}
 
-	let arr = fs.readdirSync(dir).map(x => exports.toWorker(dir, x));
+	let arr = fs.readdirSync(dir).map(x => toWorker(dir, x));
 
 	if (only) {
 		tmp = list(only);
@@ -79,9 +79,9 @@ exports.toWorkers = function (dir, opts) {
 
 async function toProfile(profile = 'default') {
 	let file = join(homedir(), '.cfw', 'config');
-	exports.assert(file, `Missing "${file}" config file`, true);
+	assert(file, `Missing "${file}" config file`, true);
 
-	let data = await exports.read(file, 'utf8');
+	let data = await read(file, 'utf8');
 	let arr = data.split(/\n+/g);
 	let i=0, name, tmp, map={};
 	let rgx = /^\[(.*)\]$/;
@@ -99,11 +99,11 @@ async function toProfile(profile = 'default') {
 	}
 
 	let out = map[profile];
-	exports.assert(out, `The "${profile}" profile is not defined`);
+	assert(out, `The "${profile}" profile is not defined`);
 	return out;
 }
 
-exports.toCredentials = async function (def) {
+export async function toCredentials(def) {
 	let {
 		CLOUDFLARE_ZONEID, CLOUDFLARE_ACCOUNTID,
 		CLOUDFLARE_AUTH_EMAIL, CLOUDFLARE_AUTH_KEY, CLOUDFLARE_TOKEN
@@ -133,14 +133,14 @@ exports.toCredentials = async function (def) {
 		}
 	}
 
-	exports.assert(zoneid, 'Missing Cloudflare "zoneid" value!');
-	exports.assert(accountid, 'Missing Cloudflare "accountid" value!');
+	assert(zoneid, 'Missing Cloudflare "zoneid" value!');
+	assert(accountid, 'Missing Cloudflare "accountid" value!');
 
 	if (token || (authkey && email)) {
 		// satisfactory
 	} else if (authkey || email) {
-		exports.assert(email, 'Missing Cloudflare "email" value!');
-		exports.assert(authkey, 'Missing Cloudflare "authkey" value!');
+		assert(email, 'Missing Cloudflare "email" value!');
+		assert(authkey, 'Missing Cloudflare "authkey" value!');
 	} else {
 		error('Missing Cloudflare "token" value or "email" + "authkey" combo!');
 	}

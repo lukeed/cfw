@@ -6,7 +6,7 @@
   "license": "MIT",
   "bin": "bin.js",
   "files": [
-    "*.js",
+    "bin.js",
     "lib"
   ],
   "author": {
@@ -18,15 +18,16 @@
     "node": ">=8"
   },
   "scripts": {
+    "build": "rollup -c",
     "test": "eslint bin.js lib"
   },
   "dependencies": {
-    "@rollup/plugin-node-resolve": "^7.1.0",
+    "@rollup/plugin-node-resolve": "^8.0.0",
     "httpie": "^1.1.2",
     "kleur": "^3.0.3",
     "klona": "^1.1.1",
     "premove": "^1.0.0",
-    "rollup": "^2.3.0",
+    "rollup": "^2.16.0",
     "sade": "^1.6.1"
   },
   "devDependencies": {

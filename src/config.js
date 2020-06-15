@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
 	// input: inject
 	output: {
 		format: 'esm',
@@ -14,8 +14,10 @@ module.exports = {
 		...require('module').builtinModules
 	],
 	plugins: [
-		require('@rollup/plugin-node-resolve')({
+		require('@rollup/plugin-node-resolve').default({
 			mainFields: ['worker', 'browser', 'module', 'jsnext', 'main']
 		})
 	]
 };
+
+export default config;

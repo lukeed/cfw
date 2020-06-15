@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 const sade = require('sade');
-const build = require('./lib/build');
+const commands = require('./lib');
 const { version } = require('./package');
-const deploy = require('./lib/deploy');
 
 sade('cfw')
 	.version(version)
@@ -14,13 +13,13 @@ sade('cfw')
 	.option('--dir', 'The directory Worker scripts', 'workers')
 	.option('--only', 'The list of Worker names to build; overrides `--ignore` list!')
 	.option('--ignore', 'The list of Worker names to skip')
-	.action(build)
+	.action(commands.build)
 
 	.command('deploy [output]')
 	.describe('Deploy the built Worker(s) – requires you `build` first.')
 	.option('--dir', 'The directory Worker scripts', 'workers')
 	.option('--only', 'The list of Worker names to build; overrides `--ignore` list!')
 	.option('--ignore', 'The list of Worker names to skip')
-	.action(deploy)
+	.action(commands.deploy)
 
 	.parse(process.argv);
