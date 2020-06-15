@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "lib": ["esnext", "es2017.object", "dom.iterable", "webworker"],
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "removeComments": true,
+    "sourceMap": false,
+    "allowJs": false,
+    "noEmit": true,
+    "baseUrl": "."
+  },
+  "include": [
+    "@types/**/*",
+    "workers/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

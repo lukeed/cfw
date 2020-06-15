@@ -1,4 +1,13 @@
-const config = {
+export const options = {
+	resolve: {
+		mainFields: ['worker', 'browser', 'module', 'jsnext', 'main']
+	},
+	typescript: {
+		extends: 'cfw'
+	}
+};
+
+export const config = {
 	// input: inject
 	output: {
 		format: 'esm',
@@ -11,10 +20,6 @@ const config = {
 		tryCatchDeoptimization: false
 	},
 	plugins: [
-		require('@rollup/plugin-node-resolve').default({
-			mainFields: ['worker', 'browser', 'module', 'jsnext', 'main']
-		})
+		// injected
 	]
 };
-
-export default config;

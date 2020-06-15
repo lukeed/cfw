@@ -6,6 +6,7 @@
   "license": "MIT",
   "bin": "bin.js",
   "files": [
+    "tsconfig.json",
     "bin.js",
     "lib"
   ],
@@ -23,6 +24,7 @@
   },
   "dependencies": {
     "@rollup/plugin-node-resolve": "^8.0.0",
+    "@rollup/plugin-typescript": "^4.1.2",
     "httpie": "^1.1.2",
     "kleur": "^3.0.3",
     "klona": "^1.1.1",

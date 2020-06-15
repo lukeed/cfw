@@ -5,7 +5,7 @@ import { existsSync } from 'fs';
 import { join, resolve } from 'path';
 import { log, success, warn } from './log';
 import { toWorkers, write } from './util';
-import baseConfig from './config';
+import * as defaults from './config';
 
 export default async function (src, output, opts) {
 	let cwd = opts.cwd = resolve(opts.cwd);
@@ -16,6 +16,7 @@ export default async function (src, output, opts) {
 	output = opts.output = resolve(cwd, opts.dest);
 	src = opts.src = resolve(cwd, opts.dirname);
 
+	let isTS = !!opts.typescript;
 	let items = toWorkers(src, opts);
 
 	if (!items.length) {
@@ -41,13 +42,27 @@ export default async function (src, output, opts) {
 
 	for (let def of items) {
 		let { name, input, cfw } = def;
-		let config = { input, ...baseConfig };
+		let options = klona(defaults.options);
+		let isTypescript = isTS || !!cfw.typescript;
+
+		if (isTypescript) {
+			Object.assign(options.typescript, cfw.typescript);
+			input = input.replace(/\.[mc]?js$/, '.ts');
+		}
+
+		let config = { input, ...defaults.config };
 		let outdir = join(output, opts.single ? '' : name);
 		config.output.file = join(outdir, 'index.js');
+
 		if (typeof cfw.build === 'function') {
 			config = klona(config);
-			cfw.build(config); // mutate~!
+			cfw.build(config, options); // mutate~!
 		}
+
+		config.plugins.push(
+			require('@rollup/plugin-node-resolve').default(options.resolve),
+			isTypescript && require('@rollup/plugin-typescript').default(options.typescript),
+		);
 
 		let now = Date.now();
 		await rollup(config).then(b => {

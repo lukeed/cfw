@@ -13,6 +13,7 @@ sade('cfw')
 	.option('--dir', 'The directory Worker scripts', 'workers')
 	.option('--only', 'The list of Worker names to build; overrides `--ignore` list!')
 	.option('--ignore', 'The list of Worker names to skip')
+	.option('--typescript', 'Expect and compile TypeScript')
 	.action(commands.build)
 
 	.command('deploy [output]')
