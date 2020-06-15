@@ -1,18 +1,11 @@
 import fs from 'fs';
-import del from 'premove';
 import { homedir } from 'os';
 import { promisify } from 'util';
 import { parse, join, resolve } from 'path';
-import { warn, error } from './log';
+import { error } from './log';
 
 export const write = promisify(fs.writeFile);
 export const read = promisify(fs.readFile);
-
-export function rimraf(path) {
-	if (!fs.existsSync(path)) return;
-	warn(`Removing existing "${parse(path).name}" directory`);
-	return del(path);
-}
 
 export function assert(mix, msg, toExist) {
 	(toExist ? fs.existsSync(mix) : !!mix) || error(msg);

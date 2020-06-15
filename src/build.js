@@ -1,8 +1,10 @@
 import klona from 'klona';
 import colors from 'kleur';
+import premove from 'premove';
+import { existsSync } from 'fs';
 import { join, resolve } from 'path';
 import { log, success, warn } from './log';
-import { rimraf, toWorkers, write } from './util';
+import { toWorkers, write } from './util';
 import baseConfig from './config';
 
 export default async function (src, output, opts) {
@@ -25,7 +27,10 @@ export default async function (src, output, opts) {
 		return warn(msg);
 	}
 
-	await rimraf(output);
+	if (existsSync(output)) {
+		warn(`Removing existing "${opts.dest}" directory`);
+		await premove(output);
+	}
 
 	const { rollup } = require('rollup');
 
