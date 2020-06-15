@@ -10,9 +10,6 @@ const config = {
 		moduleSideEffects: 'no-external',
 		tryCatchDeoptimization: false
 	},
-	external: [
-		...require('module').builtinModules
-	],
 	plugins: [
 		require('@rollup/plugin-node-resolve').default({
 			mainFields: ['worker', 'browser', 'module', 'jsnext', 'main']
