@@ -1,9 +1,6 @@
 export const options = {
 	resolve: {
 		mainFields: ['worker', 'browser', 'module', 'jsnext', 'main']
-	},
-	typescript: {
-		extends: 'cfw'
 	}
 };
 

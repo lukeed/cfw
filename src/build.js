@@ -16,7 +16,6 @@ export default async function (src, output, opts) {
 	output = opts.output = resolve(cwd, opts.dest);
 	src = opts.src = resolve(cwd, opts.dirname);
 
-	let isTS = !!opts.typescript;
 	let items = toWorkers(src, opts);
 
 	if (!items.length) {
@@ -43,13 +42,6 @@ export default async function (src, output, opts) {
 	for (let def of items) {
 		let { name, input, cfw } = def;
 		let options = klona(defaults.options);
-		let isTypescript = isTS || !!cfw.typescript;
-
-		if (isTypescript) {
-			Object.assign(options.typescript, cfw.typescript);
-			input = input.replace(/\.[mc]?js$/, '.ts');
-		}
-
 		let config = { input, ...defaults.config };
 		let outdir = join(output, opts.single ? '' : name);
 		config.output.file = join(outdir, 'index.js');
@@ -60,8 +52,7 @@ export default async function (src, output, opts) {
 		}
 
 		config.plugins.push(
-			require('@rollup/plugin-node-resolve').default(options.resolve),
-			isTypescript && require('@rollup/plugin-typescript').default(options.typescript),
+			require('@rollup/plugin-node-resolve').default(options.resolve)
 		);
 
 		let now = Date.now();
