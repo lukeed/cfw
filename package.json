@@ -32,6 +32,7 @@
     "sade": "^1.6.1"
   },
   "devDependencies": {
-    "eslint": "6.1.0"
+    "eslint": "6.1.0",
+    "terser": "4.8.0"
   }
 }
