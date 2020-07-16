@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2015",
     "module": "esnext",
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "lib": ["esnext", "es2017.object", "dom.iterable", "webworker"],
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "removeComments": true,
     "sourceMap": false,
     "allowJs": false,
@@ -15,8 +13,7 @@
     "baseUrl": "."
   },
   "include": [
-    "@types/**/*",
-    "workers/**/*"
+    "src"
   ],
   "exclude": [
     "node_modules"
