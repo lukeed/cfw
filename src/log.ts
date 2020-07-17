@@ -1,6 +1,7 @@
 import colors from 'kleur';
 
-const SPACER = ' '.repeat(6);
+export const ARROW = '   ~> ';
+export const SPACER = ' '.repeat(6);
 const CFW = colors.bold('[CFW]');
 
 function print(color: keyof colors.Kleur, msg: string): void {

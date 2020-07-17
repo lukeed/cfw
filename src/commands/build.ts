@@ -34,7 +34,7 @@ export default async function (src: string | void, output: string | void, opts: 
 
 	const { rollup } = require('rollup');
 
-	let arrow = colors.cyan('   ~> ');
+	let arrow = colors.cyan(log.ARROW);
 	let sfx = items.length === 1 ? '' : 's';
 	let count = colors.bold(items.length);
 	log.info(`Building ${count} worker${sfx}:`);

@@ -26,7 +26,7 @@ export default async function (output: string | void, opts: Options) {
 		return log.warn(msg);
 	}
 
-	let arrow = colors.cyan('   ~> ');
+	let arrow = colors.cyan(log.ARROW);
 	type Colorize = (msg: string | number) => string;
 	let attached: Colorize = x => colors.green().dim(`      + "${x}"`);
 	let detached: Colorize = x => colors.red().dim(`      - "${x}"`);
