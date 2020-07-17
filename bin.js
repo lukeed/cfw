@@ -24,14 +24,17 @@ sade('cfw')
 
 	.command('kv namespaces list')
 	.describe('List all KV namespaces')
+	.alias('kv ns list', 'kv ns ls')
 	.action(commands.ns.list)
 
 	.command('kv namespaces create <title>')
 	.describe('Create a new KV namespace')
+	.alias('kv ns create', 'kv ns new')
 	.action(commands.ns.create)
 
 	.command('kv namespaces delete <id>')
 	.describe('Delete a KV namespace')
+	.alias('kv ns delete', 'kv ns rm')
 	.action(commands.ns.destroy)
 
 	.parse(process.argv);
