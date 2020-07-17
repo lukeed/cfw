@@ -20,7 +20,6 @@ jobs:
     strategy:
       matrix:
         nodejs: [8, 10, 12, 14]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
