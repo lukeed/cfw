@@ -1,10 +1,10 @@
-export const options = {
+export const options: Rollup.Options = {
 	resolve: {
 		mainFields: ['worker', 'browser', 'module', 'jsnext', 'main']
 	}
 };
 
-export const config = {
+export const config: Rollup.Config = {
 	// input: inject
 	output: {
 		format: 'esm',

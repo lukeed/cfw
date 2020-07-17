@@ -7,7 +7,7 @@ import { log, success, warn } from './log';
 import { toWorkers, write } from './util';
 import * as defaults from './config';
 
-export default async function (src, output, opts) {
+export default async function (src: string | void, output: string | void, opts: Partial<Options>) {
 	let cwd = opts.cwd = resolve(opts.cwd);
 
 	opts.dirname = src || 'workers';
@@ -16,7 +16,7 @@ export default async function (src, output, opts) {
 	output = opts.output = resolve(cwd, opts.dest);
 	src = opts.src = resolve(cwd, opts.dirname);
 
-	let items = toWorkers(src, opts);
+	let items = toWorkers(src, opts as Options);
 
 	if (!items.length) {
 		let msg = 'No workers to build!';
@@ -56,8 +56,8 @@ export default async function (src, output, opts) {
 		);
 
 		let now = Date.now();
-		await rollup(config).then(b => {
-			return b.write(config.output);
+		await rollup(config).then((bun: Rollup.Bundle) => {
+			return bun.write(config.output);
 		});
 
 		await write(

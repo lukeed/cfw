@@ -7,12 +7,10 @@ function print(color: keyof colors.Kleur, msg: string): void {
 	console.log(colors[color](CFW), msg.includes('\n') ? msg.replace(/(\r?\n)/g, '$1' + SPACER) : msg);
 }
 
-type Logger = (msg: string) => void;
-
-export const log: Logger = msg => print('white', msg);
-export const warn: Logger = msg => print('yellow', msg);
-export const success: Logger = msg => print('green', msg);
-export const info: Logger = msg => print('cyan', msg);
+export const log = (msg: string) => print('white', msg);
+export const warn = (msg: string) => print('yellow', msg);
+export const success = (msg: string) => print('green', msg);
+export const info = (msg: string) => print('cyan', msg);
 
 export function error(msg: string, code=1): void {
 	print('red', msg);
