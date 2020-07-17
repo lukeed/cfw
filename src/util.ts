@@ -7,9 +7,8 @@ import { error } from './log';
 export const write = promisify(fs.writeFile);
 export const read = promisify(fs.readFile);
 
-export function assert(mix: unknown, msg: string, toExist?: boolean) {
-	(toExist ? fs.existsSync(mix as string) : !!mix) || error(msg);
-}
+export const assert = (mix: unknown, msg: string) => !!mix || error(msg);
+export const exists = (file: string, msg: string) =>  fs.existsSync(file) || error(msg);
 
 export function list(str: Arrayable<string>): string[] {
 	return Array.isArray(str) ? str : str.split(',');
@@ -40,7 +39,7 @@ export function toWorkerData(dir: string, name: string, isOne?: boolean): Worker
 }
 
 export function toWorkers(dir: string, opts: Options): WorkerData[] {
-	assert(dir, `Workers directory does not exist: "${dir}"`, true);
+	exists(dir, `Workers directory does not exist: "${dir}"`);
 
 	let items: string[];
 	let conf: Config | void;
@@ -80,7 +79,7 @@ export function toWorkers(dir: string, opts: Options): WorkerData[] {
  */
 async function toProfile(profile = 'default'): Promise<Partial<Profile>> {
 	let file = join(homedir(), '.cfw', 'config');
-	assert(file, `Missing "${file}" config file`, true);
+	exists(file, `Missing "${file}" config file`);
 
 	let data = await read(file, 'utf8');
 	let arr = data.split(/\n+/g);
