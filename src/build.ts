@@ -3,9 +3,9 @@ import colors from 'kleur';
 import premove from 'premove';
 import { existsSync } from 'fs';
 import { join, resolve } from 'path';
-import { log, success, warn } from './log';
 import { toWorkers, write } from './util';
 import * as defaults from './config';
+import * as log from './log';
 
 export default async function (src: string | void, output: string | void, opts: Partial<Options>) {
 	let cwd = opts.cwd = resolve(opts.cwd);
@@ -24,11 +24,11 @@ export default async function (src: string | void, output: string | void, opts: 
 			let flag = colors.dim().bold;
 			msg += `\nPerhaps the ${flag('--only')} or ${flag('--ignore')} flag needs adjusting`;
 		}
-		return warn(msg);
+		return log.warn(msg);
 	}
 
 	if (existsSync(output)) {
-		warn(`Removing existing "${opts.dest}" directory`);
+		log.warn(`Removing existing "${opts.dest}" directory`);
 		await premove(output);
 	}
 
@@ -37,7 +37,7 @@ export default async function (src: string | void, output: string | void, opts: 
 	let arrow = colors.cyan('   ~> ');
 	let sfx = items.length === 1 ? '' : 's';
 	let count = colors.bold(items.length);
-	log(`Building ${count} worker${sfx}:`);
+	log.info(`Building ${count} worker${sfx}:`);
 
 	for (let def of items) {
 		let { name, input, cfw } = def;
@@ -68,5 +68,5 @@ export default async function (src: string | void, output: string | void, opts: 
 		console.log(arrow + name + colors.italic().dim(` (${Date.now() - now}ms)`));
 	}
 
-	success(`Build complete!\nYour worker${sfx} ${items.length === 1 ? 'is' : 'are'} ready for deployment 🎉`);
+	log.success(`Build complete!\nYour worker${sfx} ${items.length === 1 ? 'is' : 'are'} ready for deployment 🎉`);
 }
