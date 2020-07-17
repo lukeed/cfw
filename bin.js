@@ -22,4 +22,16 @@ sade('cfw')
 	.option('--ignore', 'The list of Worker names to skip')
 	.action(commands.deploy)
 
+	.command('kv namespaces list')
+	.describe('List all KV namespaces')
+	.action(commands.ns_list)
+
+	.command('kv namespaces create <title>')
+	.describe('Create a new KV namespace')
+	.action(commands.ns_create)
+
+	.command('kv namespaces delete <id>')
+	.describe('Delete a KV namespace')
+	.action(commands.ns_destroy)
+
 	.parse(process.argv);

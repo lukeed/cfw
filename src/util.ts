@@ -103,7 +103,7 @@ async function toProfile(profile = 'default'): Promise<Partial<Profile>> {
 	return out;
 }
 
-export async function toCredentials(def: Config): Promise<Credentials> {
+export async function toCredentials(def: Config, loose?: boolean): Promise<Credentials> {
 	let {
 		CLOUDFLARE_ZONEID, CLOUDFLARE_ACCOUNTID,
 		CLOUDFLARE_AUTH_EMAIL, CLOUDFLARE_AUTH_KEY, CLOUDFLARE_TOKEN
@@ -133,7 +133,7 @@ export async function toCredentials(def: Config): Promise<Credentials> {
 		});
 	}
 
-	assert(zoneid, 'Missing Cloudflare "zoneid" value!');
+	assert(zoneid || loose, 'Missing Cloudflare "zoneid" value!');
 	assert(accountid, 'Missing Cloudflare "accountid" value!');
 
 	if (token || (authkey && email)) {
