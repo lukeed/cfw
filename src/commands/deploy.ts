@@ -1,8 +1,8 @@
 import colors from 'kleur';
 import { resolve } from 'path';
-import * as workers from './cloudflare/workers';
-import * as utils from './util';
-import * as log from './log';
+import * as workers from '../cloudflare/workers';
+import * as utils from '../util';
+import * as log from '../log';
 
 async function upload(file: string, name: string, creds: Credentials) {
 	let data = await utils.read(file, 'utf8');

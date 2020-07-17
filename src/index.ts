@@ -1,2 +1,2 @@
-export { default as build } from './build';
-export { default as deploy } from './deploy';
+export { default as build } from './commands/build';
+export { default as deploy } from './commands/deploy';

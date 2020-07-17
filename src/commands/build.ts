@@ -3,9 +3,9 @@ import colors from 'kleur';
 import premove from 'premove';
 import { existsSync } from 'fs';
 import { join, resolve } from 'path';
-import * as defaults from './config';
-import * as utils from './util';
-import * as log from './log';
+import * as defaults from '../config';
+import * as utils from '../util';
+import * as log from '../log';
 
 export default async function (src: string | void, output: string | void, opts: Partial<Options>) {
 	let cwd = opts.cwd = resolve(opts.cwd);
