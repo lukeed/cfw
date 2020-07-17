@@ -3,8 +3,8 @@ import colors from 'kleur';
 import premove from 'premove';
 import { existsSync } from 'fs';
 import { join, resolve } from 'path';
-import { toWorkers, write } from './util';
 import * as defaults from './config';
+import * as utils from './util';
 import * as log from './log';
 
 export default async function (src: string | void, output: string | void, opts: Partial<Options>) {
@@ -16,7 +16,7 @@ export default async function (src: string | void, output: string | void, opts: 
 	output = opts.output = resolve(cwd, opts.dest);
 	src = opts.src = resolve(cwd, opts.dirname);
 
-	let items = toWorkers(src, opts as Options);
+	let items = utils.toWorkers(src, opts as Options);
 
 	if (!items.length) {
 		let msg = 'No workers to build!';
@@ -60,7 +60,7 @@ export default async function (src: string | void, output: string | void, opts: 
 			return bun.write(config.output);
 		});
 
-		await write(
+		await utils.write(
 			join(outdir, 'cfw.json'),
 			JSON.stringify({ name, ...cfw }, null, 2)
 		);
