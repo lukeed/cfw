@@ -44,6 +44,12 @@ declare namespace Cloudflare {
 			created_on: string;
 		}
 
+		namespace Secret {
+			type ALL = Result<Pick<Secret, 'name'|'type'>[]>;
+			type CREATE = Result<Secret>;
+			type DELETE = Response;
+		}
+
 		type Binding = {
 			type: 'kv_namespace';
 			namespace_id: KV.Namespace['id'];
