@@ -1,15 +1,12 @@
 import colors from 'kleur';
 import { resolve } from 'path';
-import * as worker from './cloudflare/worker';
+import * as workers from './cloudflare/workers';
 import * as utils from './util';
 import * as log from './log';
 
-function upload(file: string, name: string, creds: Credentials) {
-	return read(file, 'utf8').then(data => {
-		return worker.script(data, name, creds);
-	}).catch(err => {
-		error(`Error reading input file!\nAttempted path: "${file}"\nReason: "${err.message || err.stack}"`);
-	});
+async function upload(file: string, name: string, creds: Credentials) {
+	let data = await utils.read(file, 'utf8');
+	return workers.script(creds, name, data);
 }
 
 export default async function (output: string | void, opts: Options) {
@@ -55,7 +52,7 @@ export default async function (output: string | void, opts: Options) {
 					let iter = Date.now();
 					let isNot = str.startsWith('!');
 					let pattern = str.substring(+isNot);
-					return worker.route(pattern, isNot ? null : name, creds).then(() => {
+					return workers.route(creds, pattern, isNot ? null : name).then(() => {
 						let fmt = isNot ? detached : attached;
 						console.log(fmt(pattern) + delta(Date.now() - iter));
 					});
