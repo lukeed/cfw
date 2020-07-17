@@ -46,7 +46,7 @@ export function toWorkers(dir: string, opts: Options): WorkerData[] {
 	let { cwd, single, only, ignore } = opts;
 
 	if (single) {
-		let name = opts.dirname;
+		let name = opts.dir;
 		if (name === '.') name = parse(cwd).base;
 		let obj = toWorkerData(dir, name, true);
 		// check for root config

@@ -6,10 +6,10 @@ import * as utils from '../util';
 import * as log from '../log';
 
 export default async function (output: string | void, opts: Options) {
+	let buildDir = output || 'build';
 	let cwd = opts.cwd = resolve(opts.cwd);
 
-	opts.dest = output || 'build';
-	output = resolve(cwd, opts.dest);
+	output = opts.output = resolve(cwd, buildDir);
 
 	let items = utils.toWorkers(output, opts);
 
@@ -61,5 +61,5 @@ export default async function (output: string | void, opts: Options) {
 		}
 	}
 
-	log.success(`Deployment complete!\nAll items within "${opts.dest}" uploaded 🎉`);
+	log.success(`Deployment complete!\nAll items within "${buildDir}" uploaded 🎉`);
 }

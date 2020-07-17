@@ -31,12 +31,9 @@ interface WorkerData {
 interface Options {
 	cwd: string;
 	/** Name of source directory */
-	dirname: string;
 	dir: string;
 	/** Absolute source path */
-	src: string;
-	/** Name of output directory */
-	dest: string;
+	source: string;
 	/** Absolute output path */
 	output: string;
 	single?: boolean;

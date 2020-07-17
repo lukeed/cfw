@@ -8,13 +8,13 @@ import * as utils from '../util';
 import * as log from '../log';
 
 export default async function (src: string | void, output: string | void, opts: Partial<Options>) {
+	let buildDir = output || 'build';
 	let cwd = opts.cwd = resolve(opts.cwd);
 
-	opts.dirname = src || opts.dir;
-	opts.dest = output || opts.dest || 'build';
+	opts.dir = src || opts.dir;
 
-	output = opts.output = resolve(cwd, opts.dest);
-	src = opts.src = resolve(cwd, opts.dirname);
+	src = opts.source = resolve(cwd, opts.dir);
+	output = opts.output = resolve(cwd, buildDir);
 
 	let items = utils.toWorkers(src, opts as Options);
 
@@ -28,7 +28,7 @@ export default async function (src: string | void, output: string | void, opts: 
 	}
 
 	if (existsSync(output)) {
-		log.warn(`Removing existing "${opts.dest}" directory`);
+		log.warn(`Removing existing "${buildDir}" directory`);
 		await premove(output);
 	}
 
