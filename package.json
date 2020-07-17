@@ -20,8 +20,7 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "pretest": "tsc --noEmit",
-    "test": "eslint bin.js src"
+    "test": "tsc --noEmit"
   },
   "dependencies": {
     "@rollup/plugin-node-resolve": "^8.1.0",
@@ -34,7 +33,6 @@
   },
   "devDependencies": {
     "@types/node": "14.0.23",
-    "eslint": "6.1.0",
     "terser": "4.8.0",
     "typescript": "3.9.7"
   }
