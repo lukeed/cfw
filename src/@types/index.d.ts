@@ -32,6 +32,7 @@ interface Options {
 	cwd: string;
 	/** Name of source directory */
 	dirname: string;
+	dir: string;
 	/** Absolute source path */
 	src: string;
 	/** Name of output directory */

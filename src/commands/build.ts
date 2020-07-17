@@ -10,7 +10,7 @@ import * as log from '../log';
 export default async function (src: string | void, output: string | void, opts: Partial<Options>) {
 	let cwd = opts.cwd = resolve(opts.cwd);
 
-	opts.dirname = src || 'workers';
+	opts.dirname = src || opts.dir;
 	opts.dest = output || opts.dest || 'build';
 
 	output = opts.output = resolve(cwd, opts.dest);
