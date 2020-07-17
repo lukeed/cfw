@@ -17,15 +17,7 @@ export default async function (src: string | void, output: string | void, opts: 
 	output = opts.output = resolve(cwd, buildDir);
 
 	let items = utils.toWorkers(src, opts as Options);
-
-	if (!items.length) {
-		let msg = 'No workers to build!';
-		if (opts.only || opts.ignore) {
-			let flag = colors.dim().bold;
-			msg += `\nPerhaps the ${flag('--only')} or ${flag('--ignore')} flag needs adjusting`;
-		}
-		return log.warn(msg);
-	}
+	if (!items.length) return log.missing('Nothing to build!', opts);
 
 	if (existsSync(output)) {
 		log.warn(`Removing existing "${buildDir}" directory`);

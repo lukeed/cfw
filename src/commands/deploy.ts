@@ -12,15 +12,7 @@ export default async function (output: string | void, opts: Options) {
 	output = opts.output = resolve(cwd, buildDir);
 
 	let items = utils.toWorkers(output, opts);
-
-	if (!items.length) {
-		let msg = 'Nothing to deploy!';
-		if (opts.only || opts.ignore) {
-			let flag = colors.dim().bold;
-			msg += `\nPerhaps the ${flag('--only')} or ${flag('--ignore')} flag needs adjusting`;
-		}
-		return log.warn(msg);
-	}
+	if (!items.length) return log.missing('Nothing to deploy!', opts);
 
 	let arrow = colors.cyan(log.ARROW);
 	type Colorize = (msg: string | number) => string;
