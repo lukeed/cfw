@@ -1,7 +1,7 @@
 import { error } from '../log';
 import { send, toHeaders } from './utils';
 
-export function route(pattern, script, creds) {
+export function route(pattern: string, script: Nullable<string>, creds: Credentials) {
 	return send('POST', `/zones/${creds.zoneid}/workers/routes`, {
 		headers: toHeaders(creds, {
 			'Content-Type': 'application/javascript',
@@ -17,7 +17,7 @@ export function route(pattern, script, creds) {
 	});
 }
 
-export function script(filedata, name, creds) {
+export function script(filedata: string, name: string, creds: Credentials) {
 	return send('PUT', `/accounts/${creds.accountid}/workers/scripts/${name}`, {
 		headers: toHeaders(creds, {
 			'Content-Type': 'application/javascript',

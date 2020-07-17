@@ -4,7 +4,7 @@ import * as worker from './cloudflare/worker';
 import { log, success, warn, error } from './log';
 import { read, toCredentials, toWorkers } from './util';
 
-function upload(file, name, creds) {
+function upload(file: string, name: string, creds: Credentials) {
 	return read(file, 'utf8').then(data => {
 		return worker.script(data, name, creds);
 	}).catch(err => {
@@ -12,7 +12,7 @@ function upload(file, name, creds) {
 	});
 }
 
-export default async function (output, opts) {
+export default async function (output: string | void, opts: Options) {
 	let cwd = opts.cwd = resolve(opts.cwd);
 
 	opts.dest = output || 'build';
@@ -30,9 +30,10 @@ export default async function (output, opts) {
 	}
 
 	let arrow = colors.cyan('   ~> ');
-	let detached = x => colors.red().dim(`      - "${x}"`);
-	let attached = x => colors.green().dim(`      + "${x}"`);
-	let delta = ms => colors.italic().dim(` (${ms}ms)`);
+	type Colorize = (msg: string | number) => string;
+	let attached: Colorize = x => colors.green().dim(`      + "${x}"`);
+	let detached: Colorize = x => colors.red().dim(`      - "${x}"`);
+	let delta: Colorize = ms => colors.italic().dim(` (${ms}ms)`);
 
 	let sfx = items.length === 1 ? '' : 's';
 	let count = colors.bold(items.length);

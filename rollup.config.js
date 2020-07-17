@@ -46,7 +46,7 @@ const typescript = {
 };
 
 module.exports = {
-	input: 'src/index.js',
+	input: 'src/index.ts',
 	output: {
 		format: 'cjs',
 		file: 'lib/index.js',
