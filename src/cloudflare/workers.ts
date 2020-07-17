@@ -1,4 +1,5 @@
 import { error } from '../log';
+import { rand, multipart } from '../util';
 import { send, authorize } from './client';
 
 // https://api.cloudflare.com/#worker-routes-create-route
@@ -14,11 +15,24 @@ export function route(creds: Credentials, pattern: string, script: Nullable<stri
 }
 
 // https://api.cloudflare.com/#worker-script-upload-worker
-export function script(creds: Credentials, name: string, filedata: string) {
-	return send<Cloudflare.Worker.Script.UPLOAD>('PUT', `/accounts/${creds.accountid}/workers/scripts/${name}`, {
-		headers: authorize(creds, { 'Content-Type': 'application/javascript' }),
-		body: filedata
+export async function script(creds: Credentials, worker: string, filedata: Buffer, metadata: Cloudflare.Worker.Metadata | void) {
+	const boundary = '----' + rand() + rand();
+
+	const content = multipart(boundary, {
+		script: {
+			type: 'application/javascript',
+			value: filedata,
+		},
+		metadata: {
+			type: 'application/json',
+			value: metadata ? JSON.stringify(metadata) : '{"body_part": "script","bindings":[]}'
+		}
+	});
+
+	return send<Cloudflare.Worker.Script.UPLOAD>('PUT', `/accounts/${creds.accountid}/workers/scripts/${worker}`, {
+		headers: authorize(creds, { 'Content-Type': `multipart/form-data; boundary=${boundary}` }),
+		body: content
 	}).catch(err => {
-		error(`Error uploading "${name}" script!\n${JSON.stringify(err.data || err.message, null, 2)}`);
+		error(`Error uploading "${worker}" script!\n${JSON.stringify(err.data || err.message, null, 2)}`);
 	});
 }

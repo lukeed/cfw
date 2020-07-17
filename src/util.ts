@@ -147,3 +147,27 @@ export async function toCredentials(def: Config, loose?: boolean): Promise<Crede
 
 	return { authkey, accountid, email, token, zoneid };
 }
+
+export const rand = () => Math.random().toString(36).slice(2);
+
+interface FormPart {
+	value: string | Buffer;
+	filename?: string;
+	type?: string;
+}
+
+export function multipart(boundary: string, dict: Record<string, FormPart>): string {
+	let key, tmp: FormPart, content = '';
+	let NL = '\r\n', BOUND = '--' + boundary;
+
+	for (key in dict) {
+		tmp = dict[key];
+		content += BOUND + NL;
+		content += `Content-Disposition: form-data; name="${key}"`;
+		if (tmp.filename) content += `; filename="${tmp.filename}"`;
+		if (tmp.type) content += NL + `Content-Type: ${tmp.type}`;
+		content += NL + NL + tmp.value + NL;
+	}
+
+	return content + BOUND + '--';
+}

@@ -1,13 +1,9 @@
 import colors from 'kleur';
 import { resolve } from 'path';
 import * as workers from '../cloudflare/workers';
+import * as globals from '../cloudflare/globals';
 import * as utils from '../util';
 import * as log from '../log';
-
-async function upload(file: string, name: string, creds: Credentials) {
-	let data = await utils.read(file, 'utf8');
-	return workers.script(creds, name, data);
-}
 
 export default async function (output: string | void, opts: Options) {
 	let cwd = opts.cwd = resolve(opts.cwd);
@@ -43,8 +39,11 @@ export default async function (output: string | void, opts: Options) {
 
 		let creds = await utils.toCredentials(cfw);
 
+		let metadata = cfw.globals && globals.metadata(cfw.globals);
+		let filedata = await utils.read(input);
+
 		let now = Date.now();
-		await upload(input, name, creds);
+		await workers.script(creds, name, filedata, metadata);
 		console.log(arrow + name + delta(Date.now() - now));
 
 		if (cfw.routes) {
@@ -60,8 +59,6 @@ export default async function (output: string | void, opts: Options) {
 				})
 			);
 		}
-
-		// TODO: resources
 	}
 
 	log.success(`Deployment complete!\nAll items within "${opts.dest}" uploaded 🎉`);
