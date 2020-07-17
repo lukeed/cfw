@@ -32,10 +32,6 @@ interface Options {
 	cwd: string;
 	/** Name of source directory */
 	dir: string;
-	/** Absolute source path */
-	source: string;
-	/** Absolute output path */
-	output: string;
 	single?: boolean;
 	profile?: string;
 	ignore?: Arrayable<string>;

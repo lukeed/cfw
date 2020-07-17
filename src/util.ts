@@ -38,7 +38,10 @@ export function toWorkerData(dir: string, name: string, isOne?: boolean): Worker
 	};
 }
 
-export function toWorkers(dir: string, opts: Options): WorkerData[] {
+export function toWorkers(dirname: string, opts: Options): WorkerData[] {
+	opts.cwd = resolve(opts.cwd);
+
+	let dir = resolve(opts.cwd, dirname);
 	exists(dir, `Workers directory does not exist: "${dir}"`);
 
 	let items: string[];

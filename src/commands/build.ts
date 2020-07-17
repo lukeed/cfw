@@ -8,16 +8,14 @@ import * as utils from '../util';
 import * as log from '../log';
 
 export default async function (src: string | void, output: string | void, opts: Partial<Options>) {
-	let buildDir = output || 'build';
-	let cwd = opts.cwd = resolve(opts.cwd);
-
 	opts.dir = src || opts.dir;
 
-	src = opts.source = resolve(cwd, opts.dir);
-	output = opts.output = resolve(cwd, buildDir);
-
-	let items = utils.toWorkers(src, opts as Options);
+	let items = utils.toWorkers(opts.dir, opts as Options);
 	if (!items.length) return log.missing('Nothing to build!', opts);
+
+	let buildDir = output || 'build';
+	src = resolve(opts.cwd, opts.dir);
+	output = resolve(opts.cwd, buildDir);
 
 	if (existsSync(output)) {
 		log.warn(`Removing existing "${buildDir}" directory`);

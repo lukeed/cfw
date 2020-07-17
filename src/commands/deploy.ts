@@ -7,11 +7,7 @@ import * as log from '../log';
 
 export default async function (output: string | void, opts: Options) {
 	let buildDir = output || 'build';
-	let cwd = opts.cwd = resolve(opts.cwd);
-
-	output = opts.output = resolve(cwd, buildDir);
-
-	let items = utils.toWorkers(output, opts);
+	let items = utils.toWorkers(buildDir, opts as Options);
 	if (!items.length) return log.missing('Nothing to deploy!', opts);
 
 	let arrow = colors.cyan(log.ARROW);
