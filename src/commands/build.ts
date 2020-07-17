@@ -25,8 +25,8 @@ export default async function (src: string | void, output: string | void, opts: 
 	const { rollup } = require('rollup');
 
 	let arrow = colors.cyan(log.ARROW);
-	let sfx = items.length === 1 ? '' : 's';
 	let count = colors.bold(items.length);
+	let sfx = items.length === 1 ? '' : 's';
 	log.info(`Building ${count} worker${sfx}:`);
 
 	for (let def of items) {

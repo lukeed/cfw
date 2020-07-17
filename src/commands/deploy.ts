@@ -15,8 +15,8 @@ export default async function (output: string | void, opts: Options) {
 	let detached: Colorize = x => colors.red().dim(`      - "${x}"`);
 	let delta: Colorize = ms => colors.italic().dim(` (${ms}ms)`);
 
-	let sfx = items.length === 1 ? '' : 's';
 	let count = colors.bold(items.length);
+	let sfx = items.length === 1 ? '' : 's';
 	log.info(`Deploying ${count} worker${sfx}:`);
 
 	for (let def of items) {
