@@ -1,7 +1,7 @@
 import colors from 'kleur';
 import { resolve } from 'path';
 import * as worker from './cloudflare/worker';
-import { read, toCredentials, toWorkers } from './util';
+import * as utils from './util';
 import * as log from './log';
 
 function upload(file: string, name: string, creds: Credentials) {
@@ -18,7 +18,7 @@ export default async function (output: string | void, opts: Options) {
 	opts.dest = output || 'build';
 	output = resolve(cwd, opts.dest);
 
-	let items = toWorkers(output, opts);
+	let items = utils.toWorkers(output, opts);
 
 	if (!items.length) {
 		let msg = 'Nothing to deploy!';
@@ -41,7 +41,9 @@ export default async function (output: string | void, opts: Options) {
 
 	for (let def of items) {
 		let { name, input, cfw } = def;
-		let creds = await toCredentials(cfw);
+		utils.exists(input, `Worker input does not exist: "${input}"`);
+
+		let creds = await utils.toCredentials(cfw);
 
 		let now = Date.now();
 		await upload(input, name, creds);
@@ -54,7 +56,8 @@ export default async function (output: string | void, opts: Options) {
 					let isNot = str.startsWith('!');
 					let pattern = str.substring(+isNot);
 					return worker.route(pattern, isNot ? null : name, creds).then(() => {
-						console.log((isNot ? detached : attached)(pattern) + delta(Date.now() - iter));
+						let fmt = isNot ? detached : attached;
+						console.log(fmt(pattern) + delta(Date.now() - iter));
 					});
 				})
 			);
