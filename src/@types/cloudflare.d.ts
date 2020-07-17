@@ -36,6 +36,32 @@ declare namespace Cloudflare {
 			type UPLOAD = Result<Script>;
 			type DOWNLOAD = Script['script'];
 		}
+
+		interface Secret {
+			name: string;
+			type: 'secret_type';
+			modified_on: string;
+			created_on: string;
+		}
+
+		type Binding = {
+			type: 'kv_namespace';
+			namespace_id: KV.Namespace['id'];
+			name: string;
+		} | {
+			type: 'wasm_module';
+			part: 'wasm'; // TODO?
+			name: string;
+		} | {
+			type: 'plain_text' | 'secret_text';
+			name: string;
+			text: string;
+		};
+
+		interface Metadata {
+			body_part: string;
+			bindings: Binding[];
+		}
 	}
 
 	namespace KV {

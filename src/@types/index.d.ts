@@ -4,6 +4,7 @@ type Nullable<T> = T | null;
 // ---
 
 type Builder = (config: Rollup.Config, options: Rollup.Options) => void;
+type Globals = Record<string, string>;
 
 interface Config {
 	name?: string;
@@ -12,6 +13,7 @@ interface Config {
 	profile?: string;
 	routes?: string[];
 	build?: Builder;
+	globals?: Globals;
 	// should not exist
 	token?: string;
 	accountid?: string;
