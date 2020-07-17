@@ -1,8 +1,8 @@
 import colors from 'kleur';
 import { resolve } from 'path';
 import * as worker from './cloudflare/worker';
-import { log, success, warn, error } from './log';
 import { read, toCredentials, toWorkers } from './util';
+import * as log from './log';
 
 function upload(file: string, name: string, creds: Credentials) {
 	return read(file, 'utf8').then(data => {
@@ -26,7 +26,7 @@ export default async function (output: string | void, opts: Options) {
 			let flag = colors.dim().bold;
 			msg += `\nPerhaps the ${flag('--only')} or ${flag('--ignore')} flag needs adjusting`;
 		}
-		return warn(msg);
+		return log.warn(msg);
 	}
 
 	let arrow = colors.cyan('   ~> ');
@@ -37,7 +37,7 @@ export default async function (output: string | void, opts: Options) {
 
 	let sfx = items.length === 1 ? '' : 's';
 	let count = colors.bold(items.length);
-	log(`Deploying ${count} worker${sfx}:`);
+	log.info(`Deploying ${count} worker${sfx}:`);
 
 	for (let def of items) {
 		let { name, input, cfw } = def;
@@ -63,5 +63,5 @@ export default async function (output: string | void, opts: Options) {
 		// TODO: resources
 	}
 
-	success(`Deployment complete!\nAll items within "${opts.dest}" uploaded 🎉`);
+	log.success(`Deployment complete!\nAll items within "${opts.dest}" uploaded 🎉`);
 }
