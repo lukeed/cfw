@@ -53,6 +53,7 @@ module.exports = {
 		esModule: false,
 		interop: false,
 		strict: false,
+		freeze: false,
 	},
 	external: [
 		...require('module').builtinModules,
