@@ -54,8 +54,8 @@ export function toWorkers(dirname: string, opts: Options): WorkerData[] {
 		let obj = toWorkerData(dir, name, true);
 		// check for root config
 		if (conf = toConfig(cwd)) {
-			if (conf.name) obj.name = conf.name;
 			Object.assign(obj.cfw, conf);
+			if (conf.name) obj.name = conf.name;
 			if (opts.profile) obj.cfw.profile = opts.profile;
 		}
 		return [obj];
