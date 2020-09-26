@@ -1,5 +1,4 @@
 import colors from 'kleur';
-import { resolve } from 'path';
 import * as workers from '../cloudflare/workers';
 import * as globals from '../cloudflare/globals';
 import * as utils from '../util';
