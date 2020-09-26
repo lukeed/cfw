@@ -1,7 +1,7 @@
-import klona from 'klona';
 import colors from 'kleur';
 import { existsSync } from 'fs';
 import { premove } from 'premove';
+import { klona } from 'klona/lite';
 import { join, resolve } from 'path';
 import * as defaults from '../config';
 import * as utils from '../util';

@@ -26,7 +26,7 @@
     "@rollup/plugin-node-resolve": "^8.1.0",
     "httpie": "^1.1.2",
     "kleur": "^4.0.0",
-    "klona": "^1.1.1",
+    "klona": "^2.0.0",
     "premove": "^3.0.1",
     "rollup": "^2.20.0",
     "sade": "^1.7.3"
