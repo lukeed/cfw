@@ -53,18 +53,31 @@ export async function create(key: string, value: string, opts: Partial<Options>)
 	}
 
 	await Promise.all(toAdd.map(x => x()));
-
 	log.success(`Added secret to worker${sfx}`);
 }
 
-export async function destroy(key: string, opts: Partial<Options>) {
+export async function destroy(key: string, opts: Partial<Options & { quiet: boolean }>) {
 	let items = utils.toWorkers(opts.dir, opts as Options);
 	if (!items.length) return log.missing('No workers found!', opts);
+
+	let count = colors.bold(items.length);
+	let sfx = items.length === 1 ? '' : 's';
+	let toRem: Array<() => Promise<void>> = [];
+	log.info(`Removing "${key}" secret from ${count} worker${sfx}:`);
 
 	for (let def of items) {
 		let { name, cfw } = def;
 		cfw.profile = cfw.profile || opts.profile;
 		let creds = await utils.toCredentials(cfw);
-		console.log('~> name', name, key, creds);
+		toRem.push(() => {
+			let now = Date.now();
+			return Secrets.destroy(creds, name, key, !!opts.quiet).then(res => {
+				let arrow = (res.success ? colors.cyan : colors.red)(log.ARROW);
+				console.log(arrow + name + log.time(Date.now() - now));
+			})
+		});
 	}
+
+	await Promise.all(toRem.map(x => x()));
+	log.success(`Removed secret from worker${sfx}`);
 }
