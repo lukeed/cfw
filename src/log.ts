@@ -12,7 +12,7 @@ export const info = (msg: string) => print('white', msg);
 export const success = (msg: string) => print('green', msg);
 export const warn = (msg: string) => print('yellow', msg);
 
-export function error(msg: string, code=1): void {
+export function error(msg: string, code=1): never {
 	print('red', msg);
 	process.exit(code);
 }
