@@ -12,7 +12,7 @@ export function list(creds: Credentials, worker: string) {
 
 // https://github.com/cloudflare/cloudflare-rs/blob/358de27b95d0b840c973cce9bff197aae2660f84/cloudflare/src/endpoints/workers/create_secret.rs#L16
 export function create(creds: Credentials, worker: string, key: string, value: string) {
-	return send('PUT', `/accounts/${creds.accountid}/workers/scripts/${worker}/secrets`, {
+	return send<Cloudflare.Worker.Secret.CREATE>('PUT', `/accounts/${creds.accountid}/workers/scripts/${worker}/secrets`, {
 		headers: authorize(creds),
 		body: <Cloudflare.Worker.Binding>{
 			type: 'secret_text',
