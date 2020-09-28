@@ -22,3 +22,15 @@ export function missing(text: string, opts: Partial<Options>) {
 	if (opts.only || opts.ignore) text += `\nPerhaps the ${FLAG('--only')} or ${FLAG('--ignore')} flag needs adjusting`;
 	return warn(text);
 }
+
+export function time(ms: number) {
+	return colors.italic().dim(` (${ms}ms)`);
+}
+
+export function item(name: string, delta?: number, isAdd?: boolean) {
+	let sym = '•', fn = colors.dim
+	let text = delta != null ? time(delta) : '';
+	if (isAdd) (sym='+', fn=colors.green().dim);
+	else if (isAdd != null) (sym='-', fn=colors.red().dim);
+	console.log( fn(SPACER + sym + ` "${name}"`) + text);
+}

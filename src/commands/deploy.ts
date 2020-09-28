@@ -10,11 +10,6 @@ export default async function (output: string | void, opts: Options) {
 	if (!items.length) return log.missing('Nothing to deploy!', opts);
 
 	let arrow = colors.cyan(log.ARROW);
-	type Colorize = (msg: string | number) => string;
-	let attached: Colorize = x => colors.green().dim(`      + "${x}"`);
-	let detached: Colorize = x => colors.red().dim(`      - "${x}"`);
-	let delta: Colorize = ms => colors.italic().dim(` (${ms}ms)`);
-
 	let count = colors.bold(items.length);
 	let sfx = items.length === 1 ? '' : 's';
 	log.info(`Deploying ${count} worker${sfx}:`);
@@ -31,7 +26,7 @@ export default async function (output: string | void, opts: Options) {
 
 		let now = Date.now();
 		await workers.script(creds, name, filedata, metadata);
-		console.log(arrow + name + delta(Date.now() - now));
+		console.log(arrow + name + log.time(Date.now() - now));
 
 		if (cfw.routes) {
 			await Promise.all(
@@ -40,8 +35,7 @@ export default async function (output: string | void, opts: Options) {
 					let isNot = str.startsWith('!');
 					let pattern = str.substring(+isNot);
 					return workers.route(creds, pattern, isNot ? null : name).then(() => {
-						let fmt = isNot ? detached : attached;
-						console.log(fmt(pattern) + delta(Date.now() - iter));
+						log.item(pattern, Date.now() - iter, !isNot);
 					});
 				})
 			);

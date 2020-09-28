@@ -55,7 +55,7 @@ export default async function (src: string | void, output: string | void, opts: 
 			JSON.stringify({ name, ...cfw }, null, 2)
 		);
 
-		console.log(arrow + name + colors.italic().dim(` (${Date.now() - now}ms)`));
+		console.log(arrow + name + log.time(Date.now() - now));
 	}
 
 	log.success(`Build complete!\nYour worker${sfx} ${items.length === 1 ? 'is' : 'are'} ready for deployment 🎉`);
