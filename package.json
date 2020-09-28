@@ -6,7 +6,6 @@
   "license": "MIT",
   "bin": "bin.js",
   "files": [
-    "tsconfig.json",
     "bin.js",
     "lib"
   ],
