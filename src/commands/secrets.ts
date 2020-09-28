@@ -12,7 +12,6 @@ export async function list(opts: Partial<Options>) {
 	log.info(`Fetching secrets for ${count} worker${sfx}:`);
 
 	let arrow = colors.cyan(log.ARROW);
-	let bullet = colors.dim(log.SPACER + '• ');
 
 	for (let def of items) {
 		let { name, cfw } = def;
@@ -22,8 +21,10 @@ export async function list(opts: Partial<Options>) {
 		let res = await Secrets.list(creds, name);
 		console.log(arrow + `"${name}" secrets:`);
 		if (res.result.length) {
-			for (let tmp of res.result) console.log(bullet + tmp.name);
-		} else console.log(log.SPACER + colors.italic().dim(' None'));
+			for (let tmp of res.result) log.item(tmp.name);
+		} else {
+			console.log(log.SPACER + colors.italic().dim(' None'));
+		}
 	}
 
 	log.success(`Retrieved worker${sfx ? `s'` : `'s`} secrets`);
