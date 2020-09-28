@@ -25,10 +25,12 @@ export function create(creds: Credentials, worker: string, key: string, value: s
 }
 
 // https://github.com/cloudflare/cloudflare-rs/blob/358de27b95d0b840c973cce9bff197aae2660f84/cloudflare/src/endpoints/workers/delete_secret.rs#L16
-export function destroy(creds: Credentials, worker: string, name: string) {
-	return send('DELETE', `/accounts/${creds.accountid}/workers/scripts/${worker}/secrets/${name}`, {
+export function destroy(creds: Credentials, worker: string, name: string, quiet: boolean) {
+	return send<Cloudflare.Worker.Secret.DELETE>('DELETE', `/accounts/${creds.accountid}/workers/scripts/${worker}/secrets/${name}`, {
 		headers: authorize(creds)
 	}).catch(err => {
-		error(`Error deleting "${worker}/${name}" secret!\n${JSON.stringify(err.data || err.message, null, 2)}`);
+		let { data, message } = err; // "workers.api.error.binding_not_found"
+		if (quiet && data && data.errors && data.errors[0].code === 10056) return data as Cloudflare.Worker.Secret.DELETE;
+		error(`Error deleting "${worker}/${name}" secret!\n${JSON.stringify(data || message, null, 2)}`);
 	});
 }
