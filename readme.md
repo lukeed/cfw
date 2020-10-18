@@ -58,11 +58,7 @@ When defined, an environment variable takes priority over all other configuratio
 
 <!-- TODO: auth + email vs token -->
 
-
-
-
-
-<!-- ## Configuration --> -->
+<!-- ## Configuration -->
 
 
 ## License
