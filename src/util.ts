@@ -85,9 +85,9 @@ async function toProfile(profile = 'default'): Promise<Partial<Profile>> {
 	exists(file, `Missing "${file}" config file`);
 
 	let data = await read(file, 'utf8');
-	let arr = data.split(/\n+/g);
 	let tmp: Partial<Profile>, map: Record<string, Partial<Profile>> = {};
 	let i=0, name: string, rgx = /^\[(.*)\]$/;
+	let arr = data.split(/(\r?\n)+/g);
 
 	for (; i < arr.length; i++) {
 		if (arr[i].startsWith('#') || !arr[i].trim().length) {
@@ -96,8 +96,8 @@ async function toProfile(profile = 'default'): Promise<Partial<Profile>> {
 			name = rgx.exec(arr[i])[1];
 			tmp = map[name] = {};
 		} else {
-			let [k, v] = arr[i].split(/\s*=\s*/);
-			tmp[k as keyof Profile] = v;
+			let [k, v] = arr[i].split('=');
+			tmp[k.trim() as keyof Profile] = v.trim();
 		}
 	}
 
