@@ -46,9 +46,14 @@ export default async function (src: string | void, output: string | void, opts: 
 		);
 
 		let now = Date.now();
-		await rollup(config).then((bun: Rollup.Bundle) => {
-			return bun.write(config.output);
-		});
+
+		try {
+			await rollup(config).then((bun: Rollup.Bundle) => {
+				return bun.write(config.output);
+			});
+		} catch (err) {
+			return log.error(err.stack || err.message);
+		}
 
 		await utils.write(
 			join(outdir, 'cfw.json'),
