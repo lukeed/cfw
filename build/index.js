@@ -1,3 +1,7 @@
+/**
+ * UNUSED - redundant `lib/index.mjs` output
+ * @see https://github.com/evanw/esbuild/issues/475
+ */
 const { build } = require('esbuild');
 const pkg = require('../package.json');
 
