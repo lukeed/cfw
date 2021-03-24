@@ -15,7 +15,7 @@
     "url": "https://lukeed.com"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "scripts": {
     "build": "rollup -c",
