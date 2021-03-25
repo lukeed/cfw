@@ -4,4 +4,4 @@ node_modules
 *.lock
 *.log
 
-/cfw.mjs
+/cfw.js

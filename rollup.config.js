@@ -49,7 +49,7 @@ module.exports = {
 	input: 'src/bin.ts',
 	output: {
 		format: 'esm',
-		file: 'cfw.mjs',
+		file: 'cfw.js',
 		banner: '#!/usr/bin/env node',
 		esModule: false,
 		interop: false,
