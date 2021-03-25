@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-const sade = require('sade');
-const commands = require('./lib');
-const { version } = require('./package');
+import sade from 'sade';
+import * as commands from './lib/index.js';
+// const { version } = require('./package');
 
 sade('cfw')
-	.version(version)
+	// .version(version)
 	.option('-C, --cwd', 'The relative working directory', '.')
 	.option('-P, --profile', 'The CFW account profile to load')
 

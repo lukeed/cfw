@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { homedir } from 'os';
 import { promisify } from 'util';
+import { createRequire } from 'module';
 import { parse, join, resolve } from 'path';
 import { error } from './log';
 
@@ -13,6 +14,8 @@ export const exists = (file: string, msg: string) =>  fs.existsSync(file) || err
 export function list(str: Arrayable<string>): string[] {
 	return Array.isArray(str) ? str : str.split(',');
 }
+
+export const require = createRequire(import.meta.url);
 
 export function load<T = unknown>(str: string, dir?: string): T | false {
 	str = resolve(dir || '.', str);

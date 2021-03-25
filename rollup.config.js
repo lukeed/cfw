@@ -48,7 +48,7 @@ const typescript = {
 module.exports = {
 	input: 'src/index.ts',
 	output: {
-		format: 'cjs',
+		format: 'esm',
 		file: 'lib/index.js',
 		esModule: false,
 		interop: false,

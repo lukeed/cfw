@@ -1,5 +1,6 @@
 {
   "name": "cfw",
+  "type": "module",
   "version": "0.0.10",
   "repository": "lukeed/cfw",
   "description": "WIP",
