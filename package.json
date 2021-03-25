@@ -4,10 +4,12 @@
   "repository": "lukeed/cfw",
   "description": "WIP",
   "license": "MIT",
+  "types": "cfw.d.ts",
   "type": "module",
   "bin": "cfw.js",
   "files": [
-    "cfw.js"
+    "cfw.js",
+    "cfw.d.ts"
   ],
   "author": {
     "name": "Luke Edwards",
