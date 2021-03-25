@@ -24,8 +24,9 @@ export const require = createRequire(import.meta.url);
 
 export async function load<T = unknown>(str: string, dir = '.'): Promise<T | false> {
 	if (!exists(str = resolve(dir, str))) return false;
-	if (/\.json$/.test(str)) return require(str);
-	return import(str).catch(() => false);
+	try { var m = require(str) }
+	catch { m = await import(str).catch(() => false) }
+	finally { return m || error(`Error loading "${str}" file`) }
 }
 
 export async function toConfig(dir?: string): Promise<Config | void> {
