@@ -1,6 +1,5 @@
 import colors from 'kleur';
 import { existsSync } from 'fs';
-import { premove } from 'premove';
 import { klona } from 'klona/json';
 import { join, resolve } from 'path';
 import * as utils from '../util';
@@ -32,7 +31,7 @@ export default async function (src: string | void, output: string | void, opts: 
 
 	if (existsSync(output)) {
 		log.warn(`Removing existing "${buildDir}" directory`);
-		await premove(output); // TODO: native
+		await utils.rmdir(output, { recursive: true });
 	}
 
 	const esbuild = await import('esbuild');

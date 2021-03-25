@@ -7,6 +7,7 @@ import { error } from './log';
 
 export const write = promisify(fs.writeFile);
 export const read = promisify(fs.readFile);
+export const rmdir = promisify(fs.rmdir);
 
 export const assert = (mix: unknown, msg: string) => !!mix || error(msg);
 export const exists = (file: string, msg: string) =>  fs.existsSync(file) || error(msg);

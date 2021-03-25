@@ -16,7 +16,7 @@
     "url": "https://lukeed.com"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=12.10"
   },
   "scripts": {
     "build": "rollup -c",
@@ -27,7 +27,6 @@
     "httpie": "^1.1.2",
     "kleur": "^4.0.0",
     "klona": "^2.0.0",
-    "premove": "^3.0.1",
     "sade": "^1.7.4"
   },
   "devDependencies": {
