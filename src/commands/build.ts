@@ -46,12 +46,25 @@ export default async function (src: string | void, output: string | void, opts: 
 		let { name, input, cfw } = def;
 		config.entryPoints = [input];
 
-		let outdir = join(output, opts.single ? '' : name);
-		config.outfile = join(outdir, 'index.js');
-
 		if (typeof cfw.build === 'function') {
 			cfw.build(config); // mutate~!
+
+			let reverts = [];
+			if (config.splitting) reverts.push('splitting');
+			if ((config.external || []).length) reverts.push('external');
+			if (config.format !== 'esm') reverts.push('format');
+			if (config.sourcemap) reverts.push('sourcemap');
+
+			if (reverts.length) {
+				let indent = '\n  ' + colors.dim().red('- ');
+				let text = 'Invalid configuration customization!\nPlease revert or remove the following keys:'
+				reverts.forEach(key => text += indent + key);
+				return log.error(text);
+			}
 		}
+
+		let outdir = join(output, opts.single ? '' : name);
+		config.outfile = join(outdir, 'index.js');
 
 		try {
 			var now = Date.now();
