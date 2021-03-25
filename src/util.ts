@@ -16,8 +16,8 @@ export function assert(input: unknown, msg: string, isFile?: boolean): true|neve
 	return (isFile ? exists(input as string) : !!input) || error(msg);
 }
 
-export function list(str: Arrayable<string>): string[] {
-	return Array.isArray(str) ? str : str.split(',');
+export function group(str: Arrayable<string>): Set<string> {
+	return new Set(Array.isArray(str) ? str : str.split(','));
 }
 
 export const require = createRequire(import.meta.url);
@@ -56,7 +56,7 @@ export async function toWorkers(dirname: string, opts: Options): Promise<WorkerD
 	let dir = resolve(opts.cwd, dirname);
 	assert(dir, `Workers directory does not exist: "${dir}"`, true);
 
-	let items: string[];
+	let items: Set<string>;
 	let conf: Config | void;
 	let { cwd, single, only, ignore } = opts;
 
@@ -78,13 +78,13 @@ export async function toWorkers(dirname: string, opts: Options): Promise<WorkerD
 	));
 
 	if (only) {
-		items = list(only);
-		return arr.filter(obj => items.includes(obj.name));
+		items = group(only);
+		return arr.filter(obj => items.has(obj.name));
 	}
 
 	if (ignore) {
-		items = list(ignore);
-		return arr.filter(obj => !items.includes(obj.name));
+		items = group(ignore);
+		return arr.filter(obj => !items.has(obj.name));
 	}
 
 	return arr;
