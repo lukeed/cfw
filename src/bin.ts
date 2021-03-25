@@ -1,7 +1,8 @@
-#!/usr/bin/env node
 import sade from 'sade';
-import * as commands from './lib/index.js';
-// const { version } = require('./package');
+import * as secrets from './commands/secrets';
+import * as names from './commands/names';
+import deploy from './commands/deploy';
+import build from './commands/build';
 
 sade('cfw')
 	// .version(version)
@@ -14,7 +15,7 @@ sade('cfw')
 	.option('-o, --only', 'The list of Worker names to build; overrides `--ignore` list!')
 	.option('-i, --ignore', 'The list of Worker names to skip')
 	.option('-s, --single', 'The target is a single Worker')
-	.action(commands.build)
+	.action(build)
 
 	.command('deploy [output]')
 	.describe('Deploy the built Worker(s) – requires you `build` first.')
@@ -22,7 +23,7 @@ sade('cfw')
 	.option('-o, --only', 'The list of Worker names to build; overrides `--ignore` list!')
 	.option('-i, --ignore', 'The list of Worker names to skip')
 	.option('-s, --single', 'The target is a single Worker')
-	.action(commands.deploy)
+	.action(deploy)
 
 	.command('secrets list').alias('secrets ls')
 	.describe('List the names of secrets attached to Worker(s) within a directory.')
@@ -30,7 +31,7 @@ sade('cfw')
 	.option('-o, --only', 'The list of Worker names to query; overrides `--ignore` list!')
 	.option('-i, --ignore', 'The list of Worker names to skip')
 	.option('-s, --single', 'The target is a single Worker')
-	.action(commands.secret.list)
+	.action(secrets.list)
 
 	.command('secrets create <name> <value>')
 	.alias('secrets new', 'secrets add', 'secrets put')
@@ -39,7 +40,7 @@ sade('cfw')
 	.option('-o, --only', 'The list of Worker names to query; overrides `--ignore` list!')
 	.option('-i, --ignore', 'The list of Worker names to skip')
 	.option('-s, --single', 'The target is a single Worker')
-	.action(commands.secret.create)
+	.action(secrets.create)
 
 	.command('secrets destroy <name>')
 	.alias('secrets delete', 'secrets rm')
@@ -49,21 +50,21 @@ sade('cfw')
 	.option('-q, --quiet', 'Do not throw error if Worker is missing secret')
 	.option('-i, --ignore', 'The list of Worker names to skip')
 	.option('-s, --single', 'The target is a single Worker')
-	.action(commands.secret.destroy)
+	.action(secrets.destroy)
 
 	.command('kv namespaces list')
 	.describe('List all KV namespaces')
 	.alias('kv ns list', 'kv ns ls')
-	.action(commands.ns.list)
+	.action(names.list)
 
 	.command('kv namespaces create <title>')
 	.describe('Create a new KV namespace')
 	.alias('kv ns create', 'kv ns new')
-	.action(commands.ns.create)
+	.action(names.create)
 
 	.command('kv namespaces destroy <id>')
 	.describe('Destroy a KV namespace')
 	.alias('kv ns delete', 'kv ns rm')
-	.action(commands.ns.destroy)
+	.action(names.destroy)
 
 	.parse(process.argv);

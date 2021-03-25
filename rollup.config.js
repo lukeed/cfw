@@ -46,10 +46,11 @@ const typescript = {
 };
 
 module.exports = {
-	input: 'src/index.ts',
+	input: 'src/bin.ts',
 	output: {
 		format: 'esm',
-		file: 'lib/index.js',
+		file: 'cfw.mjs',
+		banner: '#!/usr/bin/env node',
 		esModule: false,
 		interop: false,
 		strict: false,
