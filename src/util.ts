@@ -9,8 +9,11 @@ export const write = promisify(fs.writeFile);
 export const read = promisify(fs.readFile);
 export const rmdir = promisify(fs.rmdir);
 
-export const assert = (mix: unknown, msg: string) => !!mix || error(msg);
-export const exists = (file: string, msg: string) =>  fs.existsSync(file) || error(msg);
+export const exists = fs.existsSync;
+
+export function assert(input: unknown, msg: string, isFile?: boolean): true|never {
+	return (isFile ? exists(input as string) : !!input) || error(msg);
+}
 
 export function list(str: Arrayable<string>): string[] {
 	return Array.isArray(str) ? str : str.split(',');
@@ -46,7 +49,7 @@ export function toWorkers(dirname: string, opts: Options): WorkerData[] {
 	opts.cwd = resolve(opts.cwd);
 
 	let dir = resolve(opts.cwd, dirname);
-	exists(dir, `Workers directory does not exist: "${dir}"`);
+	assert(dir, `Workers directory does not exist: "${dir}"`, true);
 
 	let items: string[];
 	let conf: Config | void;
@@ -86,7 +89,7 @@ export function toWorkers(dirname: string, opts: Options): WorkerData[] {
  */
 async function toProfile(profile = 'default'): Promise<Partial<Profile>> {
 	let file = join(homedir(), '.cfw', 'config');
-	exists(file, `Missing "${file}" config file`);
+	assert(file, `Missing "${file}" config file`, true);
 
 	let data = await read(file, 'utf8');
 	let tmp: Partial<Profile>, map: Record<string, Partial<Profile>> = {};

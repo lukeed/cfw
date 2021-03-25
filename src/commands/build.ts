@@ -1,5 +1,4 @@
 import colors from 'kleur';
-import { existsSync } from 'fs';
 import { klona } from 'klona/json';
 import { join, resolve } from 'path';
 import * as utils from '../util';
@@ -29,7 +28,7 @@ export default async function (src: string | void, output: string | void, opts: 
 	output = resolve(opts.cwd, buildDir);
 	src = resolve(opts.cwd, opts.dir);
 
-	if (existsSync(output)) {
+	if (utils.exists(output)) {
 		log.warn(`Removing existing "${buildDir}" directory`);
 		await utils.rmdir(output, { recursive: true });
 	}

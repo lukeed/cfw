@@ -17,7 +17,7 @@ export default async function (output: string | void, opts: Options) {
 	for (let def of items) {
 		let { name, input, cfw } = def;
 		cfw.profile = cfw.profile || opts.profile;
-		utils.exists(input, `Worker input does not exist: "${input}"`);
+		utils.assert(input, `Worker input does not exist: "${input}"`, true);
 
 		let creds = await utils.toCredentials(cfw);
 
