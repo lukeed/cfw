@@ -4,7 +4,7 @@ import { join, resolve } from 'path';
 import * as utils from '../util';
 import * as log from '../log';
 
-import type { BuildOptions } from 'esbuild';
+import type { BuildFailure, BuildOptions } from 'esbuild';
 
 const defaults: BuildOptions = {
 	bundle: true,
@@ -13,6 +13,7 @@ const defaults: BuildOptions = {
 	sourcemap: false,
 	outfile: '<injected>',
 	entryPoints: ['<injected>'],
+	logLevel: 'warning', // render warnings & errors
 	resolveExtensions: ['.tsx', '.ts', '.jsx', '.mjs', '.js', '.json'],
 	mainFields: ['worker', 'browser', 'module', 'jsnext', 'main'],
 	conditions: ['worker', 'browser', 'import', 'production'],
@@ -54,12 +55,13 @@ export default async function (src: string | void, output: string | void, opts: 
 
 		try {
 			var now = Date.now();
-			let result = await esbuild.build(config);
-			result.warnings.forEach(msg => {
-				console.warn('TODO', msg);
-			});
+			await esbuild.build(config);
 		} catch (err) {
-			return log.error(err.stack || err.message);
+			// TODO: render errors manually (`chore/errors` branch)
+			// @see https://github.com/evanw/esbuild/issues/1058
+			let count = (err as BuildFailure).errors.length;
+			let suffix = count === 1 ? 'error' : 'errors';
+			return log.error(`Build failed with ${colors.underline(count)} ${suffix}!`);
 		}
 
 		await utils.write(
