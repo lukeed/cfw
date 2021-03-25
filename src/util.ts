@@ -8,6 +8,7 @@ import { error } from './log';
 export const write = promisify(fs.writeFile);
 export const read = promisify(fs.readFile);
 export const rmdir = promisify(fs.rmdir);
+export const ls = promisify(fs.readdir);
 
 export const exists = fs.existsSync;
 
@@ -21,31 +22,35 @@ export function list(str: Arrayable<string>): string[] {
 
 export const require = createRequire(import.meta.url);
 
-export function load<T = unknown>(str: string, dir?: string): T | false {
-	str = resolve(dir || '.', str);
-	return fs.existsSync(str) && require(str);
+export async function load<T = unknown>(str: string, dir = '.'): Promise<T | false> {
+	if (!exists(str = resolve(dir, str))) return false;
+	if (/\.json$/.test(str)) return require(str);
+	return import(str).catch(() => false);
 }
 
-export function toConfig(dir?: string): Config | void {
+export async function toConfig(dir?: string): Promise<Config | void> {
 	type Pkg = { cfw?: Config };
 	let tmp: Config | Pkg | false;
-	if (tmp = load<Config>('cfw.js', dir)) return tmp;
-	if (tmp = load<Config>('cfw.json', dir)) return tmp;
-	if (tmp = load<Pkg>('package.json', dir)) return tmp.cfw;
+	if (tmp = await load<Config>('cfw.js', dir)) return tmp;
+	if (tmp = await load<Config>('cfw.mjs', dir)) return tmp;
+	if (tmp = await load<Config>('cfw.cjs', dir)) return tmp;
+	if (tmp = await load<Config>('cfw.json', dir)) return tmp;
+	if (tmp = await load<Pkg>('package.json', dir)) return tmp.cfw;
 }
 
-export function toWorkerData(dir: string, name: string, isOne?: boolean): WorkerData {
+export async function toWorkerData(dir: string, name: string, isOne?: boolean): Promise<WorkerData> {
 	let abs = isOne ? dir : join(dir, name);
-	let config = toConfig(abs) || {};
+	let config = await toConfig(abs) || {};
 	return {
 		cfw: config,
 		name: config.name || name,
+		// TODO: config.build.input|entry?
 		input: join(abs, config.entry || 'index.js'),
 		abs,
 	};
 }
 
-export function toWorkers(dirname: string, opts: Options): WorkerData[] {
+export async function toWorkers(dirname: string, opts: Options): Promise<WorkerData[]> {
 	opts.cwd = resolve(opts.cwd);
 
 	let dir = resolve(opts.cwd, dirname);
@@ -58,9 +63,9 @@ export function toWorkers(dirname: string, opts: Options): WorkerData[] {
 	if (single) {
 		let name = opts.dir;
 		if (name === '.') name = parse(cwd).base;
-		let obj = toWorkerData(dir, name, true);
+		let obj = await toWorkerData(dir, name, true);
 		// check for root config
-		if (conf = toConfig(cwd)) {
+		if (conf = await toConfig(cwd)) {
 			Object.assign(obj.cfw, conf);
 			if (conf.name) obj.name = conf.name;
 			if (opts.profile) obj.cfw.profile = opts.profile;
@@ -68,7 +73,9 @@ export function toWorkers(dirname: string, opts: Options): WorkerData[] {
 		return [obj];
 	}
 
-	let arr = fs.readdirSync(dir).map(x => toWorkerData(dir, x));
+	let arr = await ls(dir).then(arr => Promise.all(
+		arr.map(x => toWorkerData(dir, x))
+	));
 
 	if (only) {
 		items = list(only);

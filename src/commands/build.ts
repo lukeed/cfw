@@ -18,10 +18,10 @@ const defaults: BuildOptions = {
 	conditions: ['worker', 'browser', 'import', 'production'],
 };
 
-export default async function (src: string | void, output: string | void, opts: Partial<Options>) {
+export default async function (src: string | void, output: string | void, opts: Options) {
 	opts.dir = src || opts.dir;
 
-	let items = utils.toWorkers(opts.dir, opts as Options);
+	let items = await utils.toWorkers(opts.dir, opts as Options);
 	if (!items.length) return log.missing('Nothing to build!', opts);
 
 	let buildDir = output || 'build';

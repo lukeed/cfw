@@ -6,7 +6,7 @@ import * as log from '../log';
 
 export default async function (output: string | void, opts: Options) {
 	let buildDir = output || 'build';
-	let items = utils.toWorkers(buildDir, opts as Options);
+	let items = await utils.toWorkers(buildDir, opts);
 	if (!items.length) return log.missing('Nothing to deploy!', opts);
 
 	let arrow = colors.cyan(log.ARROW);

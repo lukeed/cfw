@@ -4,7 +4,7 @@ import * as utils from '../util';
 import * as log from '../log';
 
 export async function list(opts: Partial<Options>) {
-	let items = utils.toWorkers(opts.dir, opts as Options);
+	let items = await utils.toWorkers(opts.dir, opts as Options);
 	if (!items.length) return log.missing('No workers found!', opts);
 
 	let count = colors.bold(items.length);
@@ -31,7 +31,7 @@ export async function list(opts: Partial<Options>) {
 }
 
 export async function create(key: string, value: string, opts: Partial<Options>) {
-	let items = utils.toWorkers(opts.dir, opts as Options);
+	let items = await utils.toWorkers(opts.dir, opts as Options);
 	if (!items.length) return log.missing('No workers found!', opts);
 
 	let arrow = colors.cyan(log.ARROW);
@@ -57,7 +57,7 @@ export async function create(key: string, value: string, opts: Partial<Options>)
 }
 
 export async function destroy(key: string, opts: Partial<Options & { quiet: boolean }>) {
-	let items = utils.toWorkers(opts.dir, opts as Options);
+	let items = await utils.toWorkers(opts.dir, opts as Options);
 	if (!items.length) return log.missing('No workers found!', opts);
 
 	let count = colors.bold(items.length);
