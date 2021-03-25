@@ -3,7 +3,7 @@ type Nullable<T> = T | null;
 
 // ---
 
-type Builder = (config: Rollup.Config, options: Rollup.Options) => void;
+type Builder = (config: import('esbuild').BuildOptions) => void;
 type Globals = Record<string, string>;
 
 interface Config {

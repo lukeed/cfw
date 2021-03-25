@@ -1,11 +1,24 @@
 import colors from 'kleur';
 import { existsSync } from 'fs';
 import { premove } from 'premove';
-import { klona } from 'klona/lite';
+import { klona } from 'klona/json';
 import { join, resolve } from 'path';
-import * as defaults from '../config';
 import * as utils from '../util';
 import * as log from '../log';
+
+import type { BuildOptions } from 'esbuild';
+
+const defaults: BuildOptions = {
+	bundle: true,
+	format: 'esm',
+	charset: 'utf8',
+	sourcemap: false,
+	outfile: '<injected>',
+	entryPoints: ['<injected>'],
+	resolveExtensions: ['.tsx', '.ts', '.jsx', '.mjs', '.js', '.json'],
+	mainFields: ['worker', 'browser', 'module', 'jsnext', 'main'],
+	conditions: ['worker', 'browser', 'import', 'production'],
+};
 
 export default async function (src: string | void, output: string | void, opts: Partial<Options>) {
 	opts.dir = src || opts.dir;
@@ -14,15 +27,15 @@ export default async function (src: string | void, output: string | void, opts: 
 	if (!items.length) return log.missing('Nothing to build!', opts);
 
 	let buildDir = output || 'build';
-	src = resolve(opts.cwd, opts.dir);
 	output = resolve(opts.cwd, buildDir);
+	src = resolve(opts.cwd, opts.dir);
 
 	if (existsSync(output)) {
 		log.warn(`Removing existing "${buildDir}" directory`);
-		await premove(output);
+		await premove(output); // TODO: native
 	}
 
-	const { rollup } = require('rollup');
+	const esbuild = await import('esbuild');
 
 	let arrow = colors.cyan(log.ARROW);
 	let count = colors.bold(items.length);
@@ -30,26 +43,22 @@ export default async function (src: string | void, output: string | void, opts: 
 	log.info(`Building ${count} worker${sfx}:`);
 
 	for (let def of items) {
+		let config = klona(defaults);
 		let { name, input, cfw } = def;
-		let options = klona(defaults.options);
-		let config = { input, ...defaults.config };
+		config.entryPoints = [input];
+
 		let outdir = join(output, opts.single ? '' : name);
-		config.output.file = join(outdir, 'index.js');
+		config.outfile = join(outdir, 'index.js');
 
 		if (typeof cfw.build === 'function') {
-			config = klona(config);
-			cfw.build(config, options); // mutate~!
+			cfw.build(config); // mutate~!
 		}
 
-		config.plugins.push(
-			require('@rollup/plugin-node-resolve').default(options.resolve)
-		);
-
-		let now = Date.now();
-
 		try {
-			await rollup(config).then((bun: Rollup.Bundle) => {
-				return bun.write(config.output);
+			var now = Date.now();
+			let result = await esbuild.build(config);
+			result.warnings.forEach(msg => {
+				console.warn('TODO', msg);
 			});
 		} catch (err) {
 			return log.error(err.stack || err.message);
