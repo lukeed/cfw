@@ -5,7 +5,7 @@ import deploy from './commands/deploy';
 import build from './commands/build';
 
 sade('cfw')
-	// .version(version)
+	.version('$$VERSION$$') // Note: Inject via build step
 	.option('-C, --cwd', 'The relative working directory', '.')
 	.option('-P, --profile', 'The CFW account profile to load')
 

@@ -39,7 +39,7 @@ const typescript = {
 		// @ts-ignore
 		let output = transpileModule(code, { ...tsconfig, fileName: file });
 		return {
-			code: output.outputText,
+			code: output.outputText.replace('$$VERSION$$', pkg.version),
 			map: output.sourceMapText || null
 		};
 	}
