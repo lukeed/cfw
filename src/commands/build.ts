@@ -13,7 +13,7 @@ const defaults: BuildOptions = {
 	sourcemap: false,
 	outfile: '<injected>',
 	entryPoints: ['<injected>'],
-	logLevel: 'warning', // render warnings & errors
+	logLevel: 'silent', // errros/warnings & handled manually
 	resolveExtensions: ['.tsx', '.ts', '.jsx', '.mjs', '.js', '.json'],
 	mainFields: ['worker', 'browser', 'module', 'jsnext', 'main'],
 	conditions: ['worker', 'browser', 'import', 'production'],
@@ -68,13 +68,10 @@ export default async function (src: string | void, output: string | void, opts: 
 
 		try {
 			var now = Date.now();
-			await esbuild.build(config);
+			var result = await esbuild.build(config);
 		} catch (err) {
-			// TODO: render errors manually (`chore/errors` branch)
-			// @see https://github.com/evanw/esbuild/issues/1058
-			let count = (err as BuildFailure).errors.length;
-			let suffix = count === 1 ? 'error' : 'errors';
-			return log.error(`Build failed with ${colors.underline(count)} ${suffix}!`);
+			let { errors } = err as BuildFailure;
+			return await log.messages(errors, true);
 		}
 
 		await utils.write(
@@ -83,6 +80,7 @@ export default async function (src: string | void, output: string | void, opts: 
 		);
 
 		console.log(arrow + name + log.time(Date.now() - now));
+		await log.messages(result.warnings);
 	}
 
 	log.success(`Build complete!\nYour worker${sfx} ${items.length === 1 ? 'is' : 'are'} ready for deployment 🎉`);

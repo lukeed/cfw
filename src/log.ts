@@ -1,4 +1,5 @@
 import colors from 'kleur';
+import type { Message } from 'esbuild';
 
 export const ARROW = '   ~> ';
 export const SPACER = ' '.repeat(6);
@@ -33,4 +34,40 @@ export function item(name: string, delta?: number, isAdd?: boolean) {
 	if (isAdd) (sym='+', fn=colors.green().dim);
 	else if (isAdd != null) (sym='-', fn=colors.red().dim);
 	console.log( fn(SPACER + sym + ` "${name}"`) + text);
+}
+
+// format esbuild errors/warnings
+export async function messages(arr: Message[], isError?: boolean) {
+	let i=0, count=arr.length;
+	if (count === i) return;
+
+	const esbuild = await import('esbuild');
+
+	let frames = await esbuild.formatMessages(arr, {
+		terminalWidth: process.stdout.columns,
+		kind: isError ? 'error' : 'warning',
+		color: colors.enabled,
+	});
+
+	let rgx = /\x1b\[32m/g; // replace ANSI green
+	let color = isError ? '\u001b[31m' : '\u001b[33m'; // red|yellow
+	let fmt = isError ? colors.red : colors.yellow;
+
+	let output = `Build ${isError ? 'failed' : 'finished'} with`;
+	output += ' ' + colors.underline(count) + ' ';
+	output += isError ? 'error' : 'warning';
+	output += count === 1 ? ':' : 's:';
+	output += '\n\n';
+
+	for (; i < count; i++) {
+		output += colors.bold().inverse( fmt(' ' + arr[i].location.file + ' ')) + ' ' + arr[i].text;
+		output += frames[i].substring(frames[i].indexOf('\n')).replace(rgx, color);
+	}
+
+	i = output.length;
+	if (output[--i] === '\n') {
+		output = output.substring(0, i);
+	}
+
+	(isError ? error : warn)(output);
 }
