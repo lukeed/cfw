@@ -1,13 +1,12 @@
 {
   "name": "cfw",
-  "type": "module",
   "version": "0.0.10",
   "repository": "lukeed/cfw",
   "description": "WIP",
   "license": "MIT",
-  "bin": "bin.js",
+  "bin": "cfw.mjs",
   "files": [
-    "bin.js"
+    "cfw.mjs"
   ],
   "author": {
     "name": "Luke Edwards",
