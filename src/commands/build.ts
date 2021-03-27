@@ -74,6 +74,8 @@ export default async function (src: string | void, output: string | void, opts: 
 			return await log.messages(errors, true);
 		}
 
+		delete cfw.entry;
+
 		await utils.write(
 			join(outdir, 'cfw.json'),
 			JSON.stringify({ name, ...cfw }, null, 2)
