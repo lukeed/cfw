@@ -74,8 +74,8 @@ export async function toWorkers(dirname: string, opts: Options): Promise<WorkerD
 		return [obj];
 	}
 
-	let arr = await ls(dir).then(arr => Promise.all(
-		arr.map(x => toWorkerData(dir, x))
+	let arr = await ls(dir, { withFileTypes: true }).then(arr => Promise.all(
+		arr.filter(x => x.isDirectory()).map(x => toWorkerData(dir, x.name))
 	));
 
 	if (only) {
