@@ -1,5 +1,11 @@
 type Builder = (config: import('esbuild').BuildOptions) => void;
-type Globals = Record<string, string>;
+type Globals = {
+	[name: string]:
+		| `KV:${string}`
+		| `ENV:${string}`
+		| `SECRET:${string}`
+		| `WASM:${string}`
+}
 
 export interface Config {
 	name?: string;
