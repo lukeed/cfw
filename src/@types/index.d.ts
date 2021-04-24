@@ -38,6 +38,7 @@ interface Options {
 	cwd: string;
 	/** Name of source directory */
 	dir: string;
+	minify?: boolean;
 	single?: boolean;
 	profile?: string;
 	ignore?: Arrayable<string>;

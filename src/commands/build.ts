@@ -13,7 +13,8 @@ const defaults: BuildOptions = {
 	sourcemap: false,
 	outfile: '<injected>',
 	entryPoints: ['<injected>'],
-	logLevel: 'silent', // errros/warnings & handled manually
+	minify: true, // disable via `--no-minify` flag
+	logLevel: 'silent', // errors & warnings are handled manually
 	resolveExtensions: ['.tsx', '.ts', '.jsx', '.mjs', '.js', '.json'],
 	mainFields: ['worker', 'browser', 'module', 'jsnext', 'main'],
 	conditions: ['worker', 'browser', 'import', 'production'],
@@ -35,6 +36,7 @@ export default async function (src: string | void, output: string | void, opts: 
 	}
 
 	const esbuild = await import('esbuild');
+	let isMinify = String(opts.minify) !== 'false';
 
 	let arrow = colors.cyan(log.ARROW);
 	let count = colors.bold(items.length);
@@ -45,6 +47,7 @@ export default async function (src: string | void, output: string | void, opts: 
 		let config = klona(defaults);
 		let { name, input, cfw } = def;
 		config.entryPoints = [input];
+		config.minify = isMinify;
 
 		if (typeof cfw.build === 'function') {
 			cfw.build(config); // mutate~!
