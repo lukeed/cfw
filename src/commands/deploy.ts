@@ -1,5 +1,6 @@
 import colors from 'kleur';
 import * as workers from '../cloudflare/workers';
+import * as subdomains from '../cloudflare/subdomains';
 import * as globals from '../cloudflare/globals';
 import * as utils from '../util';
 import * as log from '../log';
@@ -9,6 +10,7 @@ export default async function (output: string | void, opts: Options) {
 	let items = await utils.toWorkers(buildDir, opts);
 	if (!items.length) return log.missing('Nothing to deploy!', opts);
 
+	let subdomain: string | void;
 	let arrow = colors.cyan(log.ARROW);
 	let count = colors.bold(items.length);
 	let sfx = items.length === 1 ? '' : 's';
@@ -28,7 +30,15 @@ export default async function (output: string | void, opts: Options) {
 		await workers.script(creds, name, filedata, metadata);
 		console.log(arrow + name + log.time(Date.now() - now));
 
-		if (cfw.routes) {
+		if (cfw.subdomain != null && !subdomain) {
+			subdomain = await subdomains.get(creds);
+		}
+
+		if (cfw.subdomain) {
+			let t1 = Date.now();
+			await subdomains.toggle(creds, name, true);
+			log.item(`https://${name}.${subdomain}/*`, Date.now() - t1, true);
+		} else if (cfw.routes) {
 			await Promise.all(
 				cfw.routes.map(str => {
 					let iter = Date.now();
@@ -39,6 +49,12 @@ export default async function (output: string | void, opts: Options) {
 					});
 				})
 			);
+
+			if (cfw.subdomain != null) {
+				let t1 = Date.now();
+				await subdomains.toggle(creds, name, false);
+				log.item(`https://${name}.${subdomain}/*`, Date.now() - t1, false);
+			}
 		}
 	}
 
