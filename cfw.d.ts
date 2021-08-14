@@ -12,6 +12,7 @@ export interface Config {
 	entry?: string;
 	zoneid?: string;
 	profile?: string;
+	subdomain?: boolean;
 	routes?: string[];
 	build?: Builder;
 	globals?: Globals;

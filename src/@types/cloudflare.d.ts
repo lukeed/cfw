@@ -24,6 +24,15 @@ declare namespace Cloudflare {
 			type DELETE = Result<Pick<Route, 'id'>>;
 		}
 
+		interface Subdomain {
+			subdomain: string;
+		}
+
+		namespace Subdomain {
+			type GET = Result<Subdomain>;
+			type TOGGLE = Result<null>;
+		}
+
 		interface Script {
 			etag: string;
 			size: number;

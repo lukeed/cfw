@@ -151,7 +151,7 @@ export async function toCredentials(def: Config, loose?: boolean): Promise<Crede
 		});
 	}
 
-	assert(zoneid || loose, 'Missing Cloudflare "zoneid" value!');
+	assert(zoneid || loose || def.subdomain, 'Missing Cloudflare "zoneid" value!');
 	assert(accountid, 'Missing Cloudflare "accountid" value!');
 
 	if (token || (authkey && email)) {
