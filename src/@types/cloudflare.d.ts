@@ -76,9 +76,10 @@ declare namespace Cloudflare {
 		};
 
 		interface Metadata {
-			body_part: string;
 			bindings: Binding[];
+			body_part?: string;
 			usage_model?: Script['usage_model'];
+			main_module?: string;
 		}
 	}
 

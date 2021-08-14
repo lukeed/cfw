@@ -169,7 +169,7 @@ export async function toCredentials(def: Config, loose?: boolean): Promise<Crede
 
 export const rand = () => Math.random().toString(36).slice(2);
 
-interface FormPart {
+export interface FormPart {
 	value: string | Buffer;
 	filename?: string;
 	type?: string;

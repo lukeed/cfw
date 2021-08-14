@@ -35,7 +35,7 @@ export function binding(name: string, input: string): Cloudflare.Worker.Binding 
 }
 
 export function metadata(dict: Globals): Cloudflare.Worker.Metadata {
-	let key, arr: Cloudflare.Worker.Binding[] = [];
-	for (key in dict) arr.push(binding(key, dict[key]));
-	return { body_part: 'script', bindings: arr };
+	let key, bindings: Cloudflare.Worker.Binding[] = [];
+	for (key in dict) bindings.push(binding(key, dict[key]));
+	return { bindings };
 }

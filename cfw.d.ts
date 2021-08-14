@@ -14,9 +14,10 @@ export interface Config {
 	profile?: string;
 	subdomain?: boolean;
 	routes?: string[];
-	usage?: 'bundled' | 'unbound';
 	build?: Builder;
 	globals?: Globals;
+	module?: boolean;
+	usage?: 'bundled' | 'unbound';
 	// should not exist
 	token?: string;
 	accountid?: string;

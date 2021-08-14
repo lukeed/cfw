@@ -33,7 +33,7 @@ export default async function (output: string | void, opts: Options) {
 		}
 
 		let now = Date.now();
-		await workers.script(creds, name, filedata, metadata);
+		await workers.script(creds, name, filedata, metadata, !!cfw.module);
 		console.log(arrow + name + log.time(Date.now() - now));
 
 		if (cfw.subdomain != null && !subdomain) {
