@@ -7,8 +7,8 @@ export function get(creds: Credentials): Promise<string> {
 		headers: authorize(creds)
 	}).then(res => {
 		let subdomain = res.success && res.result.subdomain;
-		if (!subdomain) throw new Error('You must register a subdomain!');
-		return `${subdomain}.workers.dev`;
+		if (subdomain) return `${subdomain}.workers.dev`;
+		return error('You must register a subdomain!');
 	}).catch(err => {
 		error(`Error fetching your workers.dev subdomain!\n${JSON.stringify(err.data || err.message, null, 2)}`);
 	});
