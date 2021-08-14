@@ -14,6 +14,7 @@ export interface Config {
 	profile?: string;
 	subdomain?: boolean;
 	routes?: string[];
+	usage?: 'bundled' | 'unbound';
 	build?: Builder;
 	globals?: Globals;
 	// should not exist

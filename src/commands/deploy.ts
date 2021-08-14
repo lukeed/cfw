@@ -23,8 +23,14 @@ export default async function (output: string | void, opts: Options) {
 
 		let creds = await utils.toCredentials(cfw);
 
-		let metadata = cfw.globals && globals.metadata(cfw.globals);
+		let metadata = globals.metadata(cfw.globals || {});
 		let filedata = await utils.read(input);
+
+		if (cfw.usage) {
+			let usage = (cfw.usage || '').toLowerCase().trim();
+			utils.assert(/^(bundled|unbound)$/.test(usage), `Invalid "usage" value: "${usage}"`);
+			metadata.usage_model = usage as Config['usage'];
+		}
 
 		let now = Date.now();
 		await workers.script(creds, name, filedata, metadata);

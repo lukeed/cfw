@@ -37,11 +37,13 @@ declare namespace Cloudflare {
 			etag: string;
 			size: number;
 			modified_on: string;
+			usage_model: 'unbound' | 'bundled';
 			script: string;
 		}
 
 		namespace Script {
 			type ALL = Result<(Omit<Script, 'script'> & { id: string; created_on: string })[]>;
+			type USAGE = Result<Pick<Script, 'usage_model'>>;
 			type UPLOAD = Result<Script>;
 			type DOWNLOAD = Script['script'];
 		}
@@ -76,6 +78,7 @@ declare namespace Cloudflare {
 		interface Metadata {
 			body_part: string;
 			bindings: Binding[];
+			usage_model?: Script['usage_model'];
 		}
 	}
 

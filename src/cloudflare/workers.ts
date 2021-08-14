@@ -25,7 +25,7 @@ export async function script(creds: Credentials, worker: string, filedata: Buffe
 		},
 		metadata: {
 			type: 'application/json',
-			value: metadata ? JSON.stringify(metadata) : '{"body_part": "script","bindings":[]}'
+			value: JSON.stringify(metadata),
 		}
 	});
 

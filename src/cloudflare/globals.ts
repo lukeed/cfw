@@ -34,8 +34,8 @@ export function binding(name: string, input: string): Cloudflare.Worker.Binding 
 	return { type, name, text: value };
 }
 
-export function metadata(dict: Globals): Cloudflare.Worker.Metadata | void {
+export function metadata(dict: Globals): Cloudflare.Worker.Metadata {
 	let key, arr: Cloudflare.Worker.Binding[] = [];
 	for (key in dict) arr.push(binding(key, dict[key]));
-	if (arr.length) return { body_part: 'script', bindings: arr };
+	return { body_part: 'script', bindings: arr };
 }
