@@ -67,4 +67,7 @@ sade('cfw')
 	.alias('kv ns delete', 'kv ns rm')
 	.action(names.destroy)
 
-	.parse(process.argv);
+	.parse(process.argv, {
+		boolean: ['single', 'quiet'],
+		string: ['only', 'ignore', 'profile'],
+	});

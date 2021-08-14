@@ -12,8 +12,8 @@ export const ls = promisify(fs.readdir);
 
 export const exists = fs.existsSync;
 
-export function assert(input: unknown, msg: string, isFile?: boolean): true|never {
-	return (isFile ? exists(input as string) : !!input) || error(msg);
+export function assert(input: unknown, msg: string, isFile?: boolean): asserts input {
+	(isFile && exists(input as string)) || !!input || error(msg);
 }
 
 export function group(str: Arrayable<string>): Set<string> {
@@ -108,11 +108,11 @@ async function toProfile(profile = 'default'): Promise<Partial<Profile>> {
 		if (arr[i].startsWith('#') || !arr[i].trim().length) {
 			// skip
 		} else if (rgx.test(arr[i])) {
-			name = rgx.exec(arr[i])[1];
+			name = rgx.exec(arr[i])![1];
 			tmp = map[name] = {};
 		} else {
 			let [k, v] = arr[i].split('=');
-			tmp[k.trim() as keyof Profile] = v.trim();
+			tmp![k.trim() as keyof Profile] = v.trim();
 		}
 	}
 
@@ -141,14 +141,15 @@ export async function toCredentials(def: Config, loose?: boolean): Promise<Crede
 	}
 
 	if (def.profile) {
+		let key: keyof Profile;
 		let extra = await toProfile(def.profile);
-		Object.keys(extra).forEach((key: keyof Profile) => {
+		for (key in extra) {
 			if (!email && /CLOUDFLARE_AUTH_EMAIL/i.test(key)) email = extra[key];
 			if (!accountid && /CLOUDFLARE_ACCOUNTID/i.test(key)) accountid = extra[key];
 			if (!authkey && /CLOUDFLARE_AUTH_KEY/i.test(key)) authkey = extra[key];
 			if (!zoneid && /CLOUDFLARE_ZONEID/i.test(key)) zoneid = extra[key];
 			if (!token && /CLOUDFLARE_TOKEN/i.test(key)) token = extra[key];
-		});
+		}
 	}
 
 	assert(zoneid || loose || def.subdomain, 'Missing Cloudflare "zoneid" value!');

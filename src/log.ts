@@ -60,7 +60,7 @@ export async function messages(arr: Message[], isError?: boolean) {
 	output += '\n\n';
 
 	for (; i < count; i++) {
-		output += colors.bold().inverse( fmt(' ' + arr[i].location.file + ' ')) + ' ' + arr[i].text;
+		output += colors.bold().inverse(fmt(' ' + arr[i].location!.file + ' ')) + ' ' + arr[i].text;
 		output += frames[i].substring(frames[i].indexOf('\n')).replace(rgx, color);
 	}
 

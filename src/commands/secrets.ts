@@ -3,7 +3,7 @@ import * as Secrets from '../cloudflare/secrets';
 import * as utils from '../util';
 import * as log from '../log';
 
-export async function list(opts: Partial<Options>) {
+export async function list(opts: Options) {
 	let items = await utils.toWorkers(opts.dir, opts as Options);
 	if (!items.length) return log.missing('No workers found!', opts);
 
@@ -30,7 +30,7 @@ export async function list(opts: Partial<Options>) {
 	log.success(`Retrieved worker${sfx ? `s'` : `'s`} secrets`);
 }
 
-export async function create(key: string, value: string, opts: Partial<Options>) {
+export async function create(key: string, value: string, opts: Options) {
 	let items = await utils.toWorkers(opts.dir, opts as Options);
 	if (!items.length) return log.missing('No workers found!', opts);
 
@@ -56,7 +56,7 @@ export async function create(key: string, value: string, opts: Partial<Options>)
 	log.success(`Added secret to worker${sfx}`);
 }
 
-export async function destroy(key: string, opts: Partial<Options & { quiet: boolean }>) {
+export async function destroy(key: string, opts: Options & { quiet?: boolean }) {
 	let items = await utils.toWorkers(opts.dir, opts as Options);
 	if (!items.length) return log.missing('No workers found!', opts);
 

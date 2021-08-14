@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "strict": true,
+    "target": "es2020",
+    "alwaysStrict": true,
     "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "removeComments": true,
-    "sourceMap": false,
+    "module": "esnext",
     "allowJs": false,
     "noEmit": true,
     "baseUrl": "."

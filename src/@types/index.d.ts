@@ -34,10 +34,10 @@ interface Profile {
 }
 
 interface Credentials {
-	/** Target Zone ID */
-	zoneid: string;
 	/** Target Account ID */
 	accountid: string;
+	/** Target Zone ID */
+	zoneid?: string;
 	/** An API token; required if `authkey` and `email` are missing. */
 	token?: string;
 	/** Account authorization key; required if `token` is missing. */
