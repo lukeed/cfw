@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "test": "tsc --noEmit"
+    "types": "tsc --noEmit"
   },
   "dependencies": {
     "esbuild": "^0.11.13",
