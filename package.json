@@ -24,7 +24,7 @@
     "types": "tsc --noEmit"
   },
   "dependencies": {
-    "esbuild": "^0.11.13",
+    "esbuild": "^0.12.20",
     "httpie": "^1.1.2",
     "kleur": "^4.0.0",
     "klona": "^2.0.0",
