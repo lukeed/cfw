@@ -1,16 +1,17 @@
-import * as fs from 'fs';
 import { homedir } from 'os';
-import { promisify } from 'util';
+import { promises as fs } from 'fs';
 import { createRequire } from 'module';
+import { existsSync as exists } from 'fs';
 import { parse, join, resolve } from 'path';
 import { error } from './log';
 
-export const write = promisify(fs.writeFile);
-export const read = promisify(fs.readFile);
-export const rmdir = promisify(fs.rmdir);
-export const ls = promisify(fs.readdir);
+// @ts-ignore - Node 14.14
+export const rmdir = fs.rm || fs.rmdir;
+export const write = fs.writeFile;
+export const read = fs.readFile;
+export const ls = fs.readdir;
 
-export const exists = fs.existsSync;
+export { exists };
 
 export function assert(input: unknown, msg: string, isFile?: boolean): asserts input {
 	(isFile && exists(input as string)) || !!input || error(msg);
