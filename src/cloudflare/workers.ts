@@ -52,3 +52,13 @@ export async function script(creds: Credentials, worker: string, filedata: Buffe
 		error(`Error uploading "${worker}" script!\n${JSON.stringify(err.data || err.message, null, 2)}`);
 	});
 }
+
+// https://api.cloudflare.com/#worker-cron-trigger-update-cron-triggers
+export function schedule(creds: Credentials, worker: string, crons: Array<{ cron: string }>) {
+	return send<Cloudflare.Worker.Schedule.PUT>('PUT', `/accounts/${creds.accountid}/workers/scripts/${worker}/schedules`, {
+		headers: authorize(creds, { 'Content-Type': 'application/javascript' }),
+		body: crons, // [{ cron:string }, { cron:string }]
+	}).catch(err => {
+		error(`Error updating "${worker}" CRON triggers!\n${JSON.stringify(err.data || err.message, null, 2)}`);
+	});
+}

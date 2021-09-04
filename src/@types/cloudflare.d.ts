@@ -33,6 +33,17 @@ declare namespace Cloudflare {
 			type TOGGLE = Result<null>;
 		}
 
+		interface Schedule {
+			cron: string;
+			created_on: string;
+			modified_on: string;
+		}
+
+		namespace Schedule {
+			type PUT = Result<{ schedules: Schedule[] }>;
+			type GET = Result<{ schedules: Schedule[] }>;
+		}
+
 		interface Script {
 			etag: string;
 			size: number;

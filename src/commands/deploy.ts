@@ -62,6 +62,25 @@ export default async function (output: string | void, opts: Options) {
 				log.item(`https://${name}.${subdomain}/*`, Date.now() - t1, false);
 			}
 		}
+
+		if (cfw.cron && cfw.cron.length) {
+			type List = Record<'cron', string>[];
+			let i=0, list: List = [], rgx=/([^\s]+\s+){4}/;
+
+			// rough CRON validation
+			for (; i < cfw.cron.length; i++) {
+				rgx.test(cfw.cron[i]) || log.error(`Invalid CRON: "${cfw.cron[i]}"`);
+				list.push({ cron: cfw.cron[i] });
+			}
+
+			let t1 = Date.now();
+			await workers.schedule(creds, name, list);
+			let done = Date.now() - t1;
+
+			for (i=0; i < list.length; i++) {
+				log.item(cfw.cron[i], done, true);
+			}
+		}
 	}
 
 	log.success(`Deployment complete!\nAll items within "${buildDir}" uploaded 🎉`);

@@ -14,6 +14,7 @@ export interface Config {
 	profile?: string;
 	subdomain?: boolean;
 	routes?: string[];
+	cron?: string[];
 	build?: Builder;
 	globals?: Globals;
 	module?: boolean;
