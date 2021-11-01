@@ -1,5 +1,6 @@
 import colors from 'kleur';
 import * as workers from '../cloudflare/workers';
+import * as names from '../cloudflare/names';
 import * as subdomains from '../cloudflare/subdomains';
 import * as globals from '../cloudflare/globals';
 import * as utils from '../util';
@@ -17,7 +18,7 @@ export default async function (output: string | void, opts: Options) {
 	log.info(`Deploying ${count} worker${sfx}:`);
 
 	for (let def of items) {
-		let { name, input, cfw } = def;
+		let { name, input, abs, cfw } = def;
 		cfw.profile = cfw.profile || opts.profile;
 		utils.assert(input, `Worker input does not exist: "${input}"`, true);
 
@@ -30,6 +31,39 @@ export default async function (output: string | void, opts: Options) {
 			let usage = (cfw.usage || '').toLowerCase().trim();
 			utils.assert(/^(bundled|unbound)$/.test(usage), `Invalid "usage" value: "${usage}"`);
 			metadata.usage_model = usage as Config['usage'];
+		}
+
+		if (cfw.static) {
+			let namespaceId;
+			let kvNamespace = `__${name}-workers_sites_assets`;
+
+			let { result } = await names.list(creds);
+			let found = result.find(kv => kv.title.indexOf(kvNamespace) !== -1);
+
+			if (found && found.id) {
+				namespaceId = found.id;
+			} else {
+				try {
+					let { result: { id } } = await names.create(creds, kvNamespace);
+					namespaceId = id;
+				} catch (err) {
+					log.error(`Failed to create namespace: ${kvNamespace}. Error: ${err}`);
+				}
+			}
+
+			let { files, manifest } = await utils.toFiles(utils.join(abs, cfw.static));
+
+			let { success, errors } = await names.bulkWrite(creds, namespaceId, files);
+			
+			if(!success) {
+				log.error(`Failed to write static files to namespace: ${kvNamespace}. Error: ${errors}`);
+			} else{
+				log.info('Static site uploaded');
+			}
+			
+
+			metadata.bindings.push({ type: 'kv_namespace', namespace_id: namespaceId, name: "__STATIC_CONTENT" });
+			metadata.bindings.push({ type: 'plain_text', name: "__STATIC_CONTENT_MANIFEST", text: JSON.stringify(manifest) });
 		}
 
 		let now = Date.now();

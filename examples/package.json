@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "node ../cfw.js build",
+    "deploy": "node ../cfw.js deploy"
+  },
+  "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.1.3"
+  },
+  "devDependencies": {
+    "worktop": "latest"
+  }
+}

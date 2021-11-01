@@ -10,6 +10,7 @@ type Globals = {
 export interface Config {
 	name?: string;
 	entry?: string;
+	static?: string;
 	zoneid?: string;
 	profile?: string;
 	subdomain?: boolean;

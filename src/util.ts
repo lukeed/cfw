@@ -2,7 +2,8 @@ import { homedir } from 'os';
 import { promises as fs } from 'fs';
 import { createRequire } from 'module';
 import { existsSync as exists } from 'fs';
-import { parse, join, resolve } from 'path';
+import { parse, join, resolve, dirname } from 'path';
+import { createHash } from 'crypto';
 import { error } from './log';
 
 // @ts-ignore - Node 14.14
@@ -10,8 +11,11 @@ export const rmdir = fs.rm || fs.rmdir;
 export const write = fs.writeFile;
 export const read = fs.readFile;
 export const ls = fs.readdir;
+export const stat = fs.stat;
+export const copyFile = fs.copyFile;
+export const mkdir = fs.mkdir;
 
-export { exists };
+export { exists, join };
 
 export function assert(input: unknown, msg: string, isFile?: boolean): asserts input {
 	(isFile && exists(input as string)) || !!input || error(msg);
@@ -190,4 +194,78 @@ export function multipart(boundary: string, dict: Record<string, FormPart>): str
 	}
 
 	return content + BOUND + '--';
+}
+
+export function digest(content: Buffer) {
+	return createHash('sha256').update(content).digest('hex');
+}
+
+export async function walk(cwd: string) {
+	const all_files: string[] = [];
+
+	async function walk_dir(dir: string) {
+		const files = await ls(join(cwd, dir));
+
+		for (const file of files) {
+			const filePath = join(dir, file);
+			const fileStats = await stat(join(cwd, filePath));
+			if (fileStats.isDirectory()) {
+				await walk_dir(filePath);
+			} else {
+				all_files.push(filePath);
+			}
+		}
+	}
+	await walk_dir('');
+	return all_files;
+}
+
+export function mkdirp(dir: string) {
+	try {
+		mkdir(dir, { recursive: true });
+	} catch (e: any) {
+		if (e.code === 'EEXIST') return;
+		error(`Error creating dir. ${e}`)
+	}
+}
+
+export async function copy(from: string, to:string) {
+	if (!exists(from)) {
+		error(`From directory does not exist: "${from}`);
+	};
+
+	const stats = await stat(from);
+
+	if (stats.isDirectory()) {
+		let files = await ls(from);
+		files.forEach((file) => copy(join(from, file), join(to, file)));
+	} else {
+		mkdirp(dirname(to));
+		copyFile(from, to);
+	}
+}
+
+export async function toFiles(path: string) {
+	let files = await walk(path);
+
+	const filesWithContent = await Promise.all(files.map(async (filePath) => {
+		let buffer = await read(join(path, filePath));
+		let splitFilePath = filePath.split(".");
+		let key = [...splitFilePath.slice(0, -1), digest(buffer).slice(0,10), splitFilePath.slice(-1)].join('.');
+
+		return {
+			original: filePath,
+			key,
+			value: buffer.toString('base64'),
+			base64: true
+		};
+	}));
+
+	return {
+		files: filesWithContent,
+		manifest: filesWithContent.reduce((acc, f) => ({
+			...acc,
+			[f.original]: f.key
+		}),{})
+	}
 }

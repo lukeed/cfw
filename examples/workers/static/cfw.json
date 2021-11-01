@@ -1,0 +1,7 @@
+{
+  "name": "worktop-static",
+  "static": "public",
+  "profile": "personal",
+  "subdomain": "worktop-static",
+  "entry": "index.ts"
+}

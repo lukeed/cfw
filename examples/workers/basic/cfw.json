@@ -1,0 +1,6 @@
+{
+  "name": "worktop-demo-basic",
+  "profile": "personal",
+  "entry": "index.ts",
+  "subdomain": "worktop-demo-basic"
+}

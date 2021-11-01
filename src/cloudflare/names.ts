@@ -27,3 +27,13 @@ export function destroy(creds: Credentials, nameid: string) {
 		error(`Error removing "${nameid}" namespace!\n${JSON.stringify(err.data || err.message, null, 2)}`);
 	});
 }
+
+// https://api.cloudflare.com/#workers-kv-namespace-write-multiple-key-value-pairs
+export function bulkWrite(creds: Credentials, nameid: string, body: Record<string, string | boolean |  Cloudflare.Worker.Metadata>[]) {
+	return send<Cloudflare.KV.Namespace.CREATE>('PUT', `/accounts/${creds.accountid}/storage/kv/namespaces/${nameid}/bulk`, {
+		headers: authorize(creds),
+		body
+	}).catch(err => {
+		error(`Error bulk writing to "${nameid}" namespace!\n${JSON.stringify(err.data || err.message, null, 2)}`);
+	});
+}

@@ -45,7 +45,7 @@ export default async function (src: string | void, output: string | void, opts: 
 
 	for (let def of items) {
 		let config = klona(defaults);
-		let { name, input, cfw } = def;
+		let { name, input, abs, cfw } = def;
 		config.entryPoints = [input];
 		config.minify = isMinify;
 
@@ -83,6 +83,15 @@ export default async function (src: string | void, output: string | void, opts: 
 			join(outdir, 'cfw.json'),
 			JSON.stringify({ name, ...cfw }, null, 2)
 		);
+
+		if(cfw.static) {
+			try {
+				await utils.copy(join(abs,cfw.static), join(outdir,cfw.static));	
+			} catch (err) {
+				let { errors } = err as BuildFailure;
+				return await log.messages(errors, true);
+			}
+		}
 
 		console.log(arrow + name + log.time(Date.now() - now));
 		await log.messages(result.warnings);
