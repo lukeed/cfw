@@ -24,6 +24,7 @@
     "types": "tsc --noEmit"
   },
   "dependencies": {
+    "dotenv": "^16.0.1",
     "esbuild": "^0.12.20",
     "httpie": "^1.1.2",
     "kleur": "^4.0.0",
