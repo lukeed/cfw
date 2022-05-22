@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import sade from 'sade';
 import * as secrets from './commands/secrets';
 import * as names from './commands/names';
